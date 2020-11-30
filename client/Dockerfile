@@ -1,12 +1,15 @@
 # Use Node v8.9.0 LTS
-FROM node:carbon
+FROM node:12
 
 # Setup app working directory
-RUN mkdir -p /usr/src/app/vrse-client
-WORKDIR /usr/src/app/vrse-client
+RUN mkdir -p /usr/src/app/client
+WORKDIR /usr/src/app/client
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
+
+# Install Gatsby CLI
+RUN npm install -g gatsby-cli
 
 # Install app dependencies
 RUN npm install
@@ -21,4 +24,5 @@ COPY gatsby-config.js .
 COPY . .
 
 # Start app
-CMD [ "npm", "start" ]
+# CMD [ "npm", "start" ]
+CMD ["gatsby", "develop", "-H", "0.0.0.0"]

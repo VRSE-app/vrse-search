@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-#################################
-#      Setup node container     #
-#################################
+  #################################
+  #      Setup node container     #
+  #################################
   server:
     container_name: vrse-api
     build: ./server
@@ -18,9 +18,9 @@ services:
       - ./server/src:/usr/src/app/server/src
     command: npm start
 
-#################################
-#     Setup client container    #
-#################################
+  #################################
+  #     Setup client container    #
+  #################################
   client:
     container_name: vrse-client
     build: ./client
@@ -31,15 +31,15 @@ services:
     ports:
       - ${REACT_APP_PORT}:${REACT_APP_PORT}
     volumes:
-      - ./client/src:/usr/src/app/vrse-client/src
-      - ./client/public:/usr/src/app/vrse-client/public
+      - ./client/src:/usr/src/app/client/src
+      - ./client/public:/usr/src/app/client/public
     links:
       - server
     command: npm start
 
-#################################
-# Setup elasticsearch container #
-#################################
+  #################################
+  # Setup elasticsearch container #
+  #################################
   # An Elasticsearch container for storing and searching data
   elasticsearch: # Elasticsearch Instance
     container_name: vrse-search

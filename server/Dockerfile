@@ -1,5 +1,5 @@
 # Use Node v8.9.0 LTS
-FROM node:carbon
+FROM node:12
 
 # Setup app working directory
 RUN mkdir -p /usr/src/app/server
