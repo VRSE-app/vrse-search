@@ -1,29 +1,48 @@
 version: '3'
 
 services:
-  api: # Node.js App
+#################################
+#      Setup node container     #
+#################################
+  server:
     container_name: vrse-api
-    build: .
+    build: ./server
+    expose:
+      - ${APP_SERVER_PORT}
+    environment:
+      API_HOST: ${API_HOST}
+      APP_SERVER_PORT: ${APP_SERVER_PORT}
     ports:
-      - "3000:3000" # Expose API port
-      - "9229:9229" # Expose Node process debug port (disable in production)
-    environment: # Set ENV vars
-     - NODE_ENV=local
-     - ES_HOST=elasticsearch
-     - PORT=3000
-    # volumes: # Attach local book data directory
-    #   - ./books:/usr/src/app/books
+      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
+    volumes:
+      - ./server/src:/usr/src/app/server/src
+    command: npm start
 
-  client: # Nginx Server For Frontend App
+#################################
+#     Setup client container    #
+#################################
+  client:
     container_name: vrse-client
-    image: nginx
-    volumes: # Serve local "public" dir
-      - ./public:/usr/share/nginx/html
+    build: ./client
+    environment:
+      - REACT_APP_PORT=${REACT_APP_PORT}
+    expose:
+      - ${REACT_APP_PORT}
     ports:
-      - "8080:80" # Forward site to localhost:8080
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
+    volumes:
+      - ./client/src:/usr/src/app/vrse-client/src
+      - ./client/public:/usr/src/app/vrse-client/public
+    links:
+      - server
+    command: npm start
 
+#################################
+# Setup elasticsearch container #
+#################################
+  # An Elasticsearch container for storing and searching data
   elasticsearch: # Elasticsearch Instance
-    container_name: gs-search
+    container_name: vrse-search
     image: docker.elastic.co/elasticsearch/elasticsearch:6.1.1
     volumes: # Persist ES data in seperate "esdata" volume
       - esdata:/usr/share/elasticsearch/data
@@ -36,4 +55,4 @@ services:
       - "9200:9200"
 
 volumes: # Define seperate volume for Elasticsearch data
-  esdata:
+  esdata: 

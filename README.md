@@ -30,3 +30,16 @@ wget -B https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/20
 Configure the server and client to ensure ES (elasticsearch) and all related dependencies function in Docker container.
 
 For set up of other dependencies and project set up see relevenat README documentation in each folder. (these will be unified at one point into one comprehensive installation README.md)
+
+## Useful Sources
+
+- https://blog.logrocket.com/full-text-search-with-node-js-and-elasticsearch-on-docker/
+
+Next to try:
+- https://blog.patricktriest.com/text-search-docker-elasticsearch/
+- https://dev.to/numtostr/running-react-and-node-js-in-one-shot-with-docker-3o09
+- https://dockertraining.readthedocs.io/en/latest/nodejs/angularjs-mongodb.html
+- https://medium.com/bb-tutorials-and-thoughts/dockerizing-angular-app-with-nodejs-backend-typescript-version-4136a3ce019e
+
+issue: setup node (server) container, client (gatsby frontend) container, elasticsearch (dB) container with docker
+The docker-compose build works fine but whenever I try to docker-compuse up and get things running I get errors installing npm packages, finding the 
