@@ -25,4 +25,4 @@ COPY . .
 
 # Start app
 # CMD [ "npm", "start" ]
-CMD ["gatsby", "develop", "-H", "0.0.0.0"]
+CMD ["gatsby", "develop"]
