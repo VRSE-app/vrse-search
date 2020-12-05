@@ -9,6 +9,7 @@ var bodyParser = require("body-parser");
 const path = require('path');
 
 // Import API routes
+// const { checkConnection } = require('./connection');
 // const search = require('./routes/search')
 // const { getAuthor } = require("./routes/getAuthor.js");
 // ... others here, q: do we need the .js or not?
@@ -45,7 +46,7 @@ app
     // .use(router.routes())
     // .use(router.allowedMethods())
     .listen(port, () => {
-        console.log(`VRSE API listening on port ${port}`)
+        console.log(`VRSE API listening on port ${port}`);
     })
 
 // // Log each request to the console

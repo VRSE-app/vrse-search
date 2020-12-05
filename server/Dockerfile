@@ -14,5 +14,5 @@ RUN npm install
 # Copy sourcecode
 COPY . .
 
-# Start app
+# Start app - should this be start??
 CMD [ "npm", "run", "dev" ]

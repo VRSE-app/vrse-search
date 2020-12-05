@@ -85,6 +85,9 @@ Next to try:
 
 ### This Weekend
 
-- Migrate Koa app to express and get it to work exactly the same way
 - Set up elasticsearch database
-- figure out how to
+- import test dataset of files and then set up full database
+
+### Done
+
+- Migrate Koa app to express and get it to work exactly the same way
