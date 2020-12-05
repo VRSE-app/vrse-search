@@ -10,7 +10,7 @@ const path = require('path');
 
 // Import API routes
 // const { checkConnection } = require('./connection');
-// const search = require('./routes/search')
+const search = require('./search')
 // const { getAuthor } = require("./routes/getAuthor.js");
 // ... others here, q: do we need the .js or not?
 
@@ -34,11 +34,19 @@ app.get('/', function (req, res) {
     });
 })
 
-
 // Log percolated errors to the console
 app.on('error', err => {
     console.error('Server Error', err)
 })
+
+app.get('/search', async (req, res, next) => {
+    // should add middleware to validate the endpoint or it is brittle
+    console.log("calling /search route");
+    console.log("req params are:");
+    console.log(req);
+    const { term, offset } = req.query;
+    res.json(await search.queryTerm(term, offset));
+});
 
 app
     // .use(logger) // Add logger to the stack

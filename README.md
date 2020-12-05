@@ -50,6 +50,8 @@ Next to try:
 - https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
 - https://medium.com/valencian-digital/containerizing-a-gatsbyjs-site-with-docker-compose-eccaa9829e0c
 
+- https://github.com/d3/d3/blob/master/API.md#hierarchies-d3-hierarchy
+
 ## Meeting w/ Bob 1st December
 
 - Sketches update
