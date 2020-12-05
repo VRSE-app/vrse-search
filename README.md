@@ -81,3 +81,9 @@ Next to try:
 - [medium](https://medium.com/yom-ai/rest-api-with-node-js-and-elasticsearch-1368cf9df02a)
 - [search engine node elasticsearch](https://www.sitepoint.com/search-engine-node-elasticsearch/)
 - [github repo](https://github.com/sitepoint-editors/node-elasticsearch-tutorial)
+
+### This Weekend
+
+- Migrate Koa app to express and get it to work exactly the same way
+- Set up elasticsearch database
+- figure out how to
