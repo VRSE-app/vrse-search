@@ -1,4 +1,4 @@
-const { client, index, type } = require('./connection')
+const { client, index, type } = require('../connection')
 
 module.exports = {
 

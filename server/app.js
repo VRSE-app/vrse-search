@@ -5,32 +5,54 @@ const fs = require('fs');
 const fetch = require("node-fetch");
 const _ = require("lodash");
 const { format } = require("date-fns");
-
-const app = express()
-const port = process.env.PORT || 3000;
-
 var bodyParser = require("body-parser");
+const path = require('path');
 
 // Import API routes
-// const search = require('./search')
-// const { getAuthor } = require("./getAuthor.js");
+// const search = require('./routes/search')
+// const { getAuthor } = require("./routes/getAuthor.js");
 // ... others here, q: do we need the .js or not?
 
+const app = express();
+const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 // For XML parsing: app.use(bodyParser.xml());
 
-const INDEX = "/index.html";
+// enable CORS
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
-// Log each request to the console
-var logger = function (req, res, next) {
-    console.log("RECEIVED REQUEST: ", res);
-    next(); // passing the request to the next handler in the stack
-}
+// defined the base route and return HTML file called index.html
+app.get('/', function (req, res) {
+    res.sendFile('index.html', {
+        root: __dirname
+    });
+})
+
 
 // Log percolated errors to the console
 app.on('error', err => {
     console.error('Server Error', err)
 })
+
+app
+    // .use(logger) // Add logger to the stack
+    // .use((req, res) => res.sendFile(INDEX, { root: __dirname })) // use HTML file to show response (?)
+    // .use(router.routes())
+    // .use(router.allowedMethods())
+    .listen(port, () => {
+        console.log(`VRSE API listening on port ${port}`)
+    })
+
+// // Log each request to the console
+// var logger = function (req, res, next) {
+//     console.log("RECEIVED REQUEST: ", res);
+//     next(); // passing the request to the next handler in the stack
+// }
 
 // Set permissive CORS header
 // app.use(async (ctx, next) => {
@@ -81,13 +103,3 @@ app.on('error', err => {
 //         ctx.body = await search.getParagraphs(bookTitle, start, end)
 //     }
 // )
-
-
-app
-    // .use(logger) // Add logger to the stack
-    .use((req, res) => res.sendFile(INDEX, { root: __dirname })) // use HTML file to show response (?)
-    // .use(router.routes())
-    // .use(router.allowedMethods())
-    .listen(port, () => {
-        console.log(`VRSE API listening at http://localhost:${port}`)
-    })
