@@ -81,6 +81,7 @@ Next to try:
 - [medium](https://medium.com/yom-ai/rest-api-with-node-js-and-elasticsearch-1368cf9df02a)
 - [search engine node elasticsearch](https://www.sitepoint.com/search-engine-node-elasticsearch/)
 - [github repo](https://github.com/sitepoint-editors/node-elasticsearch-tutorial)
+- https://softwareontheroad.com/ideal-nodejs-project-structure/
 
 ### This Weekend
 
