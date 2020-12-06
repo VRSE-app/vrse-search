@@ -1,5 +1,5 @@
 // const { client, index, type } = require('../connection')
-const { client, indexName, type } = require('./connection-old');
+const { client, indexName, type } = require('./connection');
 
 module.exports = {
 

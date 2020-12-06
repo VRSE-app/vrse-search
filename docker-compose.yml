@@ -17,6 +17,7 @@ services:
     volumes:
       - ./server/src:/usr/src/app/server/src # may not need the additional server in the path (?)
       - ./books:/usr/src/app/books # you have to mount the volume where the data is imported from
+      - ./publications:/usr/src/app/publications # you have to mount the volume where the data is imported from
     command: npm start
 
   #################################
