@@ -25,7 +25,25 @@ wget https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-
 wget -B https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-11-06/ -i manifest.txt
 ```
 
-#### Configure Server, Client, and ES (elasticsearch)
+#### Configure Server, Client, and ES (elasticsearch) (With docker)
+
+All dependencies related this project are managed using docker. You can start the docker container for this project by running
+
+```sh
+docker-compose up -d --build
+```
+
+This command both sets up the containers and builds the images. Once complete the logs in your Docker Compose application should show that all three components of this application have started and been set up. You should be able to visit part of the application at its related post on localhost.
+
+Note that this command may take some time to run, especially the first time (where it can sometimes take a few minutes).
+
+#### Importing the data to elasticsearch
+
+Given the volume of data that is imported to elasticsearch (approx 170 GB) this process can take a long time to execute and requires some manual adjustment. From the root of the server directory you can run the `test.js` file using the following command. Should you wish to reset the index in ES, there is a function at the top of the file called resetIndex which can be un-commented.
+
+```sh
+node test.js
+```
 
 Configure the server and client to ensure ES (elasticsearch) and all related dependencies function in Docker container.
 
@@ -49,6 +67,8 @@ Next to try:
 - https://petemill.com/
 - https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
 - https://medium.com/valencian-digital/containerizing-a-gatsbyjs-site-with-docker-compose-eccaa9829e0c
+
+- https://github.com/d3/d3/blob/master/API.md#hierarchies-d3-hierarchy
 
 ## Meeting w/ Bob 1st December
 
@@ -81,9 +101,13 @@ Next to try:
 - [medium](https://medium.com/yom-ai/rest-api-with-node-js-and-elasticsearch-1368cf9df02a)
 - [search engine node elasticsearch](https://www.sitepoint.com/search-engine-node-elasticsearch/)
 - [github repo](https://github.com/sitepoint-editors/node-elasticsearch-tutorial)
+- https://softwareontheroad.com/ideal-nodejs-project-structure/
 
 ### This Weekend
 
-- Migrate Koa app to express and get it to work exactly the same way
 - Set up elasticsearch database
-- figure out how to
+- import test dataset of files and then set up full database
+
+### Done
+
+- Migrate Koa app to express and get it to work exactly the same way

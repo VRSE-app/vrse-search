@@ -1,49 +1,119 @@
-const elasticsearch = require('elasticsearch')
+const elasticsearch = require('elasticsearch');
 
 // Core ES variables for this project
-const index = 'library'
-const type = 'novel'
-const port = 9200
-const host = process.env.ES_HOST || 'localhost'
-const client = new elasticsearch.Client({ host: { host, port } })
-
+const indexName = 'vrse-search';
+const type = 'publication';
+const port = 9200;
+const host = process.env.ES_HOST || 'localhost';
+const client = new elasticsearch.Client({ host: { host, port } });
+console.log(client);
 /** Check the ES connection status */
 async function checkConnection() {
-    let isConnected = false
+    let isConnected = false;
     while (!isConnected) {
-        console.log('Connecting to ES')
+        console.log('Connecting to ES');
         try {
-            const health = await client.cluster.health({})
-            console.log(health)
-            isConnected = true
+            const health = await client.cluster.health({});
+            isConnected = true;
+            console.log(health);
         } catch (err) {
-            console.log('Connection Failed, Retrying...', err)
+            console.log('Connection Failed, Retrying...', err);
         }
     }
 }
 
-/** Clear the index, recreate it, and add mappings */
-async function resetIndex() {
-    if (await client.indices.exists({ index })) {
-        await client.indices.delete({ index })
+/** Create an index */
+async function createIndex() {
+    const schema = {
+        id: { type: 'text' },
+        title: { type: 'keyword' },
+        paperAbstract: { type: 'text' },
+        authors: { type: 'nested' },
+        inCitations: { type: 'nested' },
+        outCitations: { type: 'nested' },
+        year: { type: 'integer' },
+        s2Url: { type: 'text' },
+        sources: { type: 'nested' },
+        pdfUrls: { type: 'nested' },
+        venue: { type: 'text' },
+        journalName: { type: 'text' },
+        journalVolume: { type: 'text' },
+        journalPages: { type: 'text' },
+        doi: { type: 'text' },
+        doiUrl: { type: 'text' },
+        pmid: { type: 'text' },
+        fieldsOfStudy: { type: 'nested' },
+        s2PdfUrl: { type: 'text' },
+        entities: { type: 'nested' }
     }
 
-    await client.indices.create({ index })
-    await putBookMapping()
+    await client.indices.create({
+        index: 'vrse-search'
+        // type: type,
+        // body: { properties: schema }
+    });
 }
 
-/** Add book section schema mapping to ES */
-async function putBookMapping() {
-    const schema = {
-        title: { type: 'keyword' },
-        author: { type: 'keyword' },
-        location: { type: 'integer' },
-        text: { type: 'text' }
+/** Delete an existing index */
+async function deleteIndex() {
+    await client.indices.delete({
+        index: 'vrse-search'
+    });
+}
+
+/** Clear the index, recreate it, and add mappings */
+async function resetIndex() {
+    if (await client.indices.exists({ index: 'vrse-search' })) {
+        await client.indices.delete({ index: 'vrse-search' });
     }
 
-    return client.indices.putMapping({ index, type, body: { properties: schema } })
+    await client.indices.create({
+        index: 'vrse-search'
+    }, function (e, res, status) {
+        if (e) {
+            console.log(e);
+        } else {
+            console.log("created a new index", res);
+        }
+    });
+
+    await initMapping();
+}
+
+/** Define Mapping Schema to put mappings into the data */
+async function initMapping() {
+    const schema = {
+        id: { type: 'text' },
+        title: { type: 'keyword' },
+        paperAbstract: { type: 'text' },
+        authors: { type: 'nested' },
+        inCitations: { type: 'nested' },
+        outCitations: { type: 'nested' },
+        year: { type: 'integer' },
+        s2Url: { type: 'text' },
+        sources: { type: 'nested' },
+        pdfUrls: { type: 'nested' },
+        venue: { type: 'text' },
+        journalName: { type: 'text' },
+        journalVolume: { type: 'text' },
+        journalPages: { type: 'text' },
+        doi: { type: 'text' },
+        doiUrl: { type: 'text' },
+        pmid: { type: 'text' },
+        fieldsOfStudy: { type: 'nested' },
+        s2PdfUrl: { type: 'text' },
+        entities: { type: 'nested' }
+    }
+
+    return client.indices.putMapping({ index: 'vrse-search', type, body: { properties: schema } });
 }
 
 module.exports = {
-    client, index, type, checkConnection, resetIndex
+    client,
+    type,
+    checkConnection,
+    createIndex,
+    deleteIndex,
+    resetIndex,
+    initMapping
 }

@@ -1,4 +1,5 @@
-const { client, index, type } = require('./connection')
+// const { client, index, type } = require('../connection')
+const { client, indexName, type } = require('./connection');
 
 module.exports = {
 
@@ -18,7 +19,7 @@ module.exports = {
             highlight: { fields: { text: {} } }
         }
 
-        return client.search({ index, type, body })
+        return client.search({ indexName, type, body })
     },
 
     /** Get the specified range of paragraphs from a book */
@@ -34,6 +35,6 @@ module.exports = {
             query: { bool: { filter } }
         }
 
-        return client.search({ index, type, body })
+        return client.search({ indexName, type, body })
     }
 }

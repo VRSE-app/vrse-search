@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const esConnection = require('./connection')
+const esConnection = require('./connection-old')
 
 /** Clear ES index, parse and index all files from the books directory */
 async function readAndInsertBooks() {
