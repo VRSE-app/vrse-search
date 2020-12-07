@@ -111,3 +111,18 @@ Next to try:
 ### Done
 
 - Migrate Koa app to express and get it to work exactly the same way
+
+---
+
+These dependencies seem to be pulled in from the package lock
+
+npm WARN deprecated @hapi/joi@15.1.1: Switch to 'npm install joi'
+npm WARN deprecated @hapi/address@2.1.4: Moved to 'npm install @sideway/address'
+npm WARN deprecated @hapi/bourne@1.3.2: This version has been deprecated and is no longer supported or maintained
+npm WARN deprecated @hapi/hoek@8.5.1: This version has been deprecated and is no longer supported or maintained
+npm WARN deprecated @hapi/topo@3.1.6: This version has been deprecated and is no longer supported or maintained
+npm WARN deprecated highlight.js@8.9.1: Version no longer supported. Upgrade to @latest
+npm WARN deprecated core-js@2.6.12: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@~2.1.2 (node_modules/gatsby-cli/node_modules/chokidar/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.3: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
