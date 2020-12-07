@@ -1,13 +1,25 @@
-// import all other sass modules here
-// should prefix other sass modules with an underscore to change how they are compiled
-
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-// @tailwind base;
-// @tailwind components;
-// @tailwind utilities;
+// should prefix other sass modules with an underscore to change how they are compiled
+@import "./_color.scss";
+@import "./_container.scss";
+@import "./_buttons.scss";
+@import "./_article.scss";
 
-@import "_buttons";
-@import "_typography";
+h1 {
+    @apply text-6xl font-bold;
+}
+
+h2 {
+    @apply text-5xl font-bold;
+}
+
+h3 {
+    @apply text-4xl font-bold;
+}
+
+h4 {
+    @apply text-2xl font-bold;
+}

@@ -1,23 +1,28 @@
-import React from 'react';
-import PropTypes from "prop-types";
+import React from "react"
+import { SkipNavLink, SkipNavContent } from "@reach/skip-nav"
+import "@reach/skip-nav/styles.css"
+import Nav from "./Nav"
+import Footer from "./Footer"
+import CookieBanner from "react-cookie-banner"
 
-import Header from "./Header";
-import Footer from "./Footer";
+const Layout = ({ children }) => (
+    <div className="bg-gray-100 default-theme">
+        <SkipNavLink />
+        <Nav />
+        <main className="overflow-x-hidden text-gray-800">
+            <SkipNavContent />
+            {children}
+        </main>
+        <CookieBanner
+            message="This site uses cookies so we can improve the user experience."
+            onAccept={() => { }}
+            cookie="user-has-accepted-cookies"
+            disableStyle={true}
+            dismissOnScroll={false}
+        />
 
-const Layout = ({ children }) => {
-    return (
-        <>
-            <div className="flex flex-col h-screen">
-                <Header />
-                <main className="flex-grow">{children}</main>
-                <Footer />
-            </div>
-        </>
-    )
-}
+        <Footer />
+    </div>
+)
 
-Layout.propTypes = {
-    children: PropTypes.node.isRequired,
-}
-
-export default Layout; 
+export default Layout

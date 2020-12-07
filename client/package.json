@@ -6,6 +6,7 @@
   "author": "Yannis Panagis <yannis.panagis1998@gmail.com>",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
+    "@reach/skip-nav": "^0.12.1",
     "@tailwindcss/custom-forms": "^0.2.1",
     "@tailwindcss/typography": "^0.3.1",
     "autoprefixer": "^10.0.4",
@@ -30,6 +31,7 @@
     "gatsby-transformer-sharp": "^2.5.21",
     "node-sass": "^4.14.1",
     "postcss": "^8.1.14",
+    "postcss-nested": "^5.0.2",
     "prismic-dom": "^2.2.4",
     "prismjs": "^1.22.0",
     "query-string": "^6.13.7",
