@@ -7,20 +7,7 @@ import favicon from "../../assets/images/favicon.svg";
 
 import NavLinks from "../../assets/data/navLinks.json";
 import UserNavLinks from "../../assets/data/userNavLinks.json";
-
-function useOutsideAlerter(ref, fn) {
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (ref.current && !ref.current.contains(event.target)) {
-                fn(false);
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [ref, fn]);
-}
+import useOutsideAlerter from "../../hooks/useOutsideAlerter";
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
