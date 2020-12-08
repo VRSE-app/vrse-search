@@ -81,7 +81,6 @@ const Header = () => {
                         </div>
                         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                             {/* Profile dropdown */}
-
                             <div className="ml-3 relative">
                                 <div>
                                     <button
@@ -96,14 +95,7 @@ const Header = () => {
                                 </div>
 
 
-                                {/* Profile dropdown panel, show/hide based on dropdown state.
-
-                                Entering: "transition ease-out duration-100"
-                                From: "transform opacity-0 scale-95"
-                                To: "transform opacity-100 scale-100"
-                                Leaving: "transition ease-in duration-75"
-                                From: "transform opacity-100 scale-100"
-                                To: "transform opacity-0 scale-95" */}
+                                {/* Profile dropdown panel, show/hide based on dropdown state. */}
                                 {
                                     userMenuOpen &&
                                     (
