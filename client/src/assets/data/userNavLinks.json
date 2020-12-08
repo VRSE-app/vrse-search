@@ -1,0 +1,14 @@
+[
+    {
+      "label": "Profile",
+      "url": "/about"
+    },
+    {
+        "label": "Settings",
+        "url": "/settings"
+    },
+    {
+        "label": "Sign Out",
+        "url": "/sign-out"
+    }
+]

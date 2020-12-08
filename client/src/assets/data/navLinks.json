@@ -1,0 +1,10 @@
+[
+    {
+      "label": "About",
+      "url": "/about"
+    },
+    {
+        "label": "Feedback",
+        "url": "/feedback"
+    }
+]

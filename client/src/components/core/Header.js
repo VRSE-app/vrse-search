@@ -82,7 +82,7 @@ const Header = () => {
                                         NavLinks.map((item) => (
                                             <Link
                                                 to={item.url}
-                                                className="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-teal-500 hover:text-white hover:bg-teal-500 focus:outline-none focus:text-white focus:bg-teal-700 transition duration-150 ease-in-out"
+                                                className="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-primary hover:text-white hover:bg-teal-500 focus:outline-none focus:text-white focus:bg-teal-700 transition duration-150 ease-in-out"
                                                 key={item.label}
                                             >
                                                 {item.label}

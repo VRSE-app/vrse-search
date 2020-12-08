@@ -10,6 +10,7 @@
     "@tailwindcss/custom-forms": "^0.2.1",
     "@tailwindcss/typography": "^0.3.1",
     "autoprefixer": "^10.0.4",
+    "axios": "^0.21.0",
     "cloc": "^2.7.0",
     "dotenv": "^8.2.0",
     "eslint-loader": "^4.0.2",
