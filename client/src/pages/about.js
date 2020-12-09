@@ -6,7 +6,7 @@ import SEO from "../components/seo"
 const About = () => (
     <Layout>
         <SEO title="About" />
-        <div className="container">
+        <div className="container-md pt-12">
             <h1>About</h1>
             <p>This is where the about section content can go</p>
         </div>

@@ -64,12 +64,11 @@ const Header = () => {
                             {/* non mobile nav */}
                             <div className="hidden sm:block sm:ml-6">
                                 <div className="flex">
-                                    {/* <Link href="#" className="px-3 py-2 rounded-md text-sm font-medium leading-5 text-white bg-teal-900 focus:outline-none focus:text-white focus:bg-teal-700 transition duration-150 ease-in-out">Dashboard</Link> */}
                                     {
                                         NavLinks.map((item) => (
                                             <Link
                                                 to={item.url}
-                                                className="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-primary hover:text-white hover:bg-teal-500 focus:outline-none focus:text-white focus:bg-teal-700 transition duration-150 ease-in-out"
+                                                className="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-secondary hover:text-primary focus:outline-none focus:text-primary transition duration-150 ease-in-out"
                                                 key={item.label}
                                             >
                                                 {item.label}
@@ -77,46 +76,6 @@ const Header = () => {
                                         ))
                                     }
                                 </div>
-                            </div>
-                        </div>
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                            {/* Profile dropdown */}
-                            <div className="ml-3 relative">
-                                <div>
-                                    <button
-                                        className="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out"
-                                        onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                        id="user-menu"
-                                        aria-label="User menu"
-                                        aria-haspopup="true"
-                                    >
-                                        <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-                                    </button>
-                                </div>
-
-
-                                {/* Profile dropdown panel, show/hide based on dropdown state. */}
-                                {
-                                    userMenuOpen &&
-                                    (
-                                        <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
-                                            <div className="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-                                                {
-                                                    UserNavLinks.map((item) => (
-                                                        <Link
-                                                            to={item.url}
-                                                            className="block px-4 py-2 text-sm leading-5 text-teal-700 hover:bg-teal-100 focus:outline-none focus:bg-teal-100 transition duration-150 ease-in-out"
-                                                            role="menuitem"
-                                                            key={item.label}
-                                                        >
-                                                            {item.label}
-                                                        </Link>
-                                                    ))
-                                                }
-                                            </div>
-                                        </div>
-                                    )
-                                }
                             </div>
                         </div>
                     </div>
@@ -132,7 +91,7 @@ const Header = () => {
                                 NavLinks.map((item) => (
                                     <Link
                                         to={item.url}
-                                        className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-teal-300 hover:text-white hover:bg-teal-700 focus:outline-none focus:text-white focus:bg-teal-700 transition duration-150 ease-in-out"
+                                        className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-teal-700 focus:outline-none focus:text-primary focus:bg-teal-700 transition duration-150 ease-in-out"
                                         role="menuitem"
                                         key={item.label}
                                     >

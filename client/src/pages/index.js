@@ -7,6 +7,8 @@ import SEO from "../components/seo";
 import SearchBar from '../components/search/SearchBar';
 import SearchResultList from "../components/search/SearchResultList";
 
+import Logo from "../assets/images/logo.svg";
+
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
@@ -37,16 +39,15 @@ const Index = () => {
   return (
     <Layout>
       <SEO title="Home" />
-      <div className="bg-teal-100 h-64">
-        <div className="container mx-auto align-middle">
-          <SearchBar
-            searchTerm={searchTerm}
-            handleChange={(value) => setSearchTerm(value)}
-            handleSearch={e => handleSearch(e)}
-          />
-        </div>
+      <div className="container-md mx-auto align-middle pt-28">
+        <img className="h-64" src={Logo} />
+        <SearchBar
+          searchTerm={searchTerm}
+          handleChange={(value) => setSearchTerm(value)}
+          handleSearch={e => handleSearch(e)}
+        />
       </div>
-      <div className="container mx-auto mt-6">
+      <div className="container-md mx-auto mt-6">
         <SearchResultList
           results={results}
           searched={searched}

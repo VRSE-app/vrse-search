@@ -6,7 +6,7 @@ import SEO from "../components/seo";
 const Feedback = () => (
     <Layout>
         <SEO title="Feedback" />
-        <div className="container">
+        <div className="container-md">
             <h1>Feedback</h1>
             <p>This is where a feedback form would go</p>
         </div>

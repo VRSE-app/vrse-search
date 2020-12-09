@@ -4,7 +4,7 @@ import SubmitButton from "../buttons/SubmitButton";
 export default function SearchBar({ searchTerm, handleChange, handleSearch }) {
     return (
         <form onSubmit={handleSearch} className="w-full mb-8">
-            <div className="grid grid-cols-4 gap-4 pt-24">
+            <div className="grid grid-cols-4 gap-4">
                 <input
                     value={searchTerm}
                     onChange={e => handleChange(e.target.value)}
