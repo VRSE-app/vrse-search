@@ -14,24 +14,24 @@ const { concat } = require('lodash');
 
 // const directoryFiles = fs.readdirSync('./publications');
 
-function main() {
+async function main() {
     let filenamePrefix = "s2-corpus-";
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 76; i < 541; i++) {
         let str = i.toString().padStart(3, "0")
         let res = filenamePrefix.concat(str);
         res = res.concat(".gz");
         let readPath = `./publications/${res}`;
         let writePath = `./publications/${res.slice(0, -3)}`;
 
-        upload_data(readPath, writePath);
+        await upload_data(readPath, writePath);
         // resolve("done with group");
     }
 }
 
 async function concurrentUploadGroup(groupFileNames) {
     Promise.all(groupFileNames.map(filename => {
-        new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let readPath = `./publications/${filename}`
             let writePath = `./publications/${filename.slice(0, -3)}`
 
@@ -67,30 +67,37 @@ function concurrentUploadAll() {
     }))
 }
 
-function upload_data(readPath, writePath) {
+function unzip_the_thing(readPath, writePath) {
     const unzip = zlib.createGunzip();
     const writeStream = fs.createWriteStream(writePath);
 
-    fs.createReadStream(readPath).pipe(unzip).pipe(writeStream)
-        .on('finish', (err) => {
-            const reader = readline.createInterface({
-                input: fs.createReadStream(writePath)
-                // output: null,
-                // terminal: false
-            });
+    return new Promise(resolve => {
+        fs.createReadStream(readPath).pipe(unzip).pipe(writeStream)
+            .on('finish', (err) => {
+                const reader = readline.createInterface({
+                    input: fs.createReadStream(writePath)
+                });
 
-            const array = [];
+                const array = [];
 
-            reader.on('line', line => {
-                array.push(JSON.parse(line));
-            });
+                reader.on('line', line => {
+                    array.push(JSON.parse(line));
+                });
 
-            reader.on('close', () => {
-                writeToES(array, writePath);
-            });
-        })
+                reader.on('close', () => {
+                    resolve(array)
+                });
+            })
+    })
 }
 
+async function upload_data(readPath, writePath) {
+    console.log(`🔎 ${readPath}`)
+    const array = await unzip_the_thing(readPath, writePath)
+    await writeToES(array, writePath);
+    console.log(`✅ ${readPath}`)
+    await countPublications();
+}
 
 async function writeToES(array, writePath) {
     console.log("WritePath: ", writePath);
@@ -116,7 +123,7 @@ async function insertPublications(chunk) {
     await client.bulk({ refresh: true, body });
 
     const res = await client.count({ index: 'vrse-search' })
-    console.log("Count: ", res.count)
+    // console.log("Count: ", res.count)
 }
 
 async function countPublications() {
