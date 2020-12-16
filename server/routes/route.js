@@ -3,6 +3,7 @@ const router = express.Router();
 // const elastic = require('elasticsearch');
 var bodyParser = require("body-parser").json();
 const { client } = require("../connection");
+
 router.post('/search', bodyParser, (req, res) => {
     client.index({
         index: 'vrse-search',
@@ -87,9 +88,11 @@ router.delete('/search/:id', (req, res) => {
 
 router.get('/search', (req, res) => {
     let query = {
-        index: 'vrse-search'
+        index: 'vrse-search',
     }
-    if (req.query.publication) query.q = `${req.query.publication}`;
+    if (req.query.publication) {
+        query.q = `${req.query.publication}`;
+    }
     client.search(query)
         .then(resp => {
             return res.status(200).json({

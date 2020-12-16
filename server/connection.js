@@ -1,7 +1,7 @@
 const elasticsearch = require('elasticsearch');
 
 // Core ES variables for this project
-const indexName = 'vrse-search';
+// const indexName = 'vrse-search';
 const type = 'publication';
 const port = 9200;
 const host = process.env.ES_HOST || 'localhost';
@@ -49,8 +49,6 @@ async function createIndex() {
 
     await client.indices.create({
         index: 'vrse-search'
-        // type: type,
-        // body: { properties: schema }
     });
 }
 
