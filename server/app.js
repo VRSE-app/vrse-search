@@ -1,42 +1,51 @@
 require("dotenv").config();
 
+// Import API routes
 const express = require("express");
+const app = express();
+var bodyParser = require("body-parser");
+const router = express.Router();
+const { format } = require("date-fns");
+const path = require('path');
 const fs = require('fs');
 const fetch = require("node-fetch");
 const _ = require("lodash");
-const { format } = require("date-fns");
-var bodyParser = require("body-parser");
-const path = require('path');
 
-// Import API routes
-// const search = require('./search')
-// const { getAuthor } = require("./routes/getAuthor.js");
-// ... others here, q: do we need the .js or not?
+// const routes = require('./routes');
+const { client } = require("./connection");
+// const { client, indexName, type } = require('./connection');
 
-const app = express();
 const port = process.env.PORT || 3000;
+
 app.use(bodyParser.json());
+// app.use('/api/v1', routes);
+
+app.listen(port, () => {
+    console.log(`The server is listening on port ${port}`)
+})
+
+// const { getAuthor } = require("./routes/getAuthor.js");
 // For XML parsing: app.use(bodyParser.xml());
 
 // enable CORS
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
 
 // defined the base route and return HTML file called index.html
-app.get('/', function (req, res) {
-    res.sendFile('index.html', {
-        root: __dirname
-    });
-})
+// app.get('/', function (req, res) {
+//     res.sendFile('index.html', {
+//         root: __dirname
+//     });
+// })
 
 // Log percolated errors to the console
-app.on('error', err => {
-    console.error('Server Error', err)
-})
+// app.on('error', err => {
+//     console.error('Server Error', err)
+// })
 
 // app.get('/search', async (req, res, next) => {
 //     // should add middleware to validate the endpoint or it is brittle
@@ -47,14 +56,14 @@ app.on('error', err => {
 //     res.json(await search.queryTerm(term, offset));
 // });
 
-app
-    // .use(logger) // Add logger to the stack
-    // .use((req, res) => res.sendFile(INDEX, { root: __dirname })) // use HTML file to show response (?)
-    // .use(router.routes())
-    // .use(router.allowedMethods())
-    .listen(port, () => {
-        console.log(`VRSE API listening on port ${port}`);
-    })
+// app
+// .use(logger) // Add logger to the stack
+// .use((req, res) => res.sendFile(INDEX, { root: __dirname })) // use HTML file to show response (?)
+// .use(router.routes())
+// .use(router.allowedMethods())
+// .listen(port, () => {
+//     console.log(`VRSE API listening on port ${port}`);
+// })
 
 // // Log each request to the console
 // var logger = function (req, res, next) {
@@ -70,44 +79,104 @@ app
 
 // ADD ENDPOINTS HERE
 
-/**
- * GET /search
- * Search for a term in the library
- * Query Params -
- * term: string under 60 characters
- * offset: positive integer
- */
-// router.get('/search',
-//     validate({
-//         query: {
-//             term: joi.string().max(60).required(),
-//             offset: joi.number().integer().min(0).default(0)
-//         }
-//     }),
-//     async (ctx, next) => {
-//         const { term, offset } = ctx.request.query
-//         ctx.body = await search.queryTerm(term, offset)
-//     }
-// )
+router.post('/search', bodyParser, (req, res) => {
+    client.index({
+        index: 'vrse-search',
+        body: req.body
+    })
+        .then(resp => {
+            return res.status(200).json({
+                msg: 'publication indexed'
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({
+                msg: 'Error',
+                err
+            });
+        })
+});
 
-/**
- * GET /paragraphs
- * Get a range of paragraphs from the specified book
- * Query Params -
- * bookTitle: string under 256 characters
- * start: positive integer
- * end: positive integer greater than start
- */
-// router.get('/paragraphs',
-//     validate({
-//         query: {
-//             bookTitle: joi.string().max(256).required(),
-//             start: joi.number().integer().min(0).default(0),
-//             end: joi.number().integer().greater(joi.ref('start')).default(10)
-//         }
-//     }),
-//     async (ctx, next) => {
-//         const { bookTitle, start, end } = ctx.request.query
-//         ctx.body = await search.getParagraphs(bookTitle, start, end)
-//     }
-// )
+router.get('/search/:id', (req, res) => {
+    let query = {
+        index: 'vrse-search',
+        id: req.params.id
+    }
+
+    client.index.get(query)
+        .then(resp => {
+            if (!resp) {
+                return res.status(404).json({
+                    publication: resp
+                });
+            }
+            return res.status(200).json({
+                publication: resp
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({
+                msg: 'Error not found',
+                err
+            });
+        });
+});
+
+router.put('/search/:id', bodyParser, (req, res) => {
+    client.update({
+        index: 'vrse-search',
+        id: req.params.id,
+        body: {
+            doc: req.body
+        }
+    })
+        .then(resp => {
+            return res.status(200).json({
+                msg: 'product updated'
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                msg: 'Error',
+                err
+            });
+        })
+});
+
+router.delete('/search/:id', (req, res) => {
+    client.delete({
+        index: 'vrse-search',
+        id: req.params.id
+    })
+        .then(resp => {
+            res.status(200).json({
+                'msg': 'Product deleted'
+            });
+        })
+        .catch(err => {
+            res.status(404).json({
+                'msg': 'Error'
+            });
+        });
+});
+
+router.get('/search', (req, res) => {
+    let query = {
+        index: 'vrse-search'
+    }
+    if (req.query.publication) query.q = `${req.query.publication}`;
+    client.search(query)
+        .then(resp => {
+            return res.status(200).json({
+                publications: resp.hits.hits
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                msg: 'Error',
+                err
+            });
+        });
+});
