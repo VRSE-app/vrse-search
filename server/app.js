@@ -3,9 +3,10 @@ require("dotenv").config();
 // Import API routes
 const express = require("express");
 const app = express();
-// const routes = require('./routes/route');
+const routes = require('./routes/route');
 // const { client } = require("./connection");
 // const { client, indexName, type } = require('./connection');
+var bodyParser = require("body-parser");
 const { format } = require("date-fns");
 const path = require('path');
 const fs = require('fs');
@@ -15,8 +16,8 @@ const { client } = require("./connection");
 
 const port = process.env.PORT || 3000;
 
-// app.use(bodyParser.json());
-// app.use('/api/v1', routes);
+app.use(bodyParser.json());
+app.use('/api/v1', routes);
 
 app.listen(port, () => {
     console.log(`The server is listening on port ${port}`)

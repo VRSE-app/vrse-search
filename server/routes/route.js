@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 // const elastic = require('elasticsearch');
 var bodyParser = require("body-parser").json();
-// const { client } = require("../connection");
+const { client } = require("../connection");
 router.post('/search', bodyParser, (req, res) => {
     client.index({
         index: 'vrse-search',

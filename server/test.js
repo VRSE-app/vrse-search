@@ -131,5 +131,5 @@ async function countPublications() {
     console.log("Count: ", res.count)
 }
 
-// countPublications();
-main();
+countPublications();
+// main();
