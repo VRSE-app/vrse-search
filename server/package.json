@@ -10,10 +10,10 @@
   "author": "Yannis Panagis",
   "license": "MIT",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.10.0",
     "array.prototype.flatmap": "^1.2.4",
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
-    "elasticsearch": "13.3.1",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "lodash": "^4.17.20",
