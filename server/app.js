@@ -3,7 +3,7 @@ require("dotenv").config();
 // Import API routes
 const express = require("express");
 const app = express();
-// const routes = require('./routes/route');
+const routes = require('./routes/route');
 // const { client } = require("./connection");
 // const { client, indexName, type } = require('./connection');
 var bodyParser = require("body-parser");
@@ -21,11 +21,10 @@ const { client, checkConnection } = require("./connection");
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-// app.use('/api/v1', routes);
+app.use('/api/v1', routes);
 
 app.listen(port, () => {
-    console.log(`The server is listening on port ${port}`)
-    checkConnection();
+    console.log(`The server is listening on port ${port}`);
 })
 
 // const { getAuthor } = require("./routes/getAuthor.js");
@@ -44,26 +43,6 @@ app.get('/', function (req, res) {
     res.sendFile('index.html', {
         root: __dirname
     });
-})
-
-app.get('/search', (req, res) => {
-    // const searchText = req.query.text;
-
-    client.search({
-        index: 'vrse-search',
-        type: 'publication',
-        body: {
-            query: {
-                match: { title: "number theory" }
-            }
-        }
-    })
-        .then(response => {
-            return res.json(response);
-        })
-        .catch(err => {
-            return res.status(500).json({ "message": err })
-        })
 })
 
 // Log percolated errors to the console

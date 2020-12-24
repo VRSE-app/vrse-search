@@ -1,12 +1,32 @@
 const express = require('express');
 const router = express.Router();
 
+const { client } = require("../connection");
+
 // const { Client } = require('@elastic/elasticsearch');
 // const { response } = require('express');
-// const client = new Client({ node: 'http://localhost:9200' })
 
-// const elastic = require('elasticsearch');
 var bodyParser = require("body-parser").json();
+
+router.get('/_search', (req, res) => {
+    // const searchText = req.query.text;
+
+    client.search({
+        index: 'vrse-search',
+        type: 'publication',
+        body: {
+            query: {
+                match: { title: "number theory" }
+            }
+        }
+    })
+        .then(response => {
+            return res.json(response);
+        })
+        .catch(err => {
+            return res.status(500).json({ "message": err })
+        })
+})
 
 // router.post('/search', bodyParser, (req, res) => {
 //     client.index({
