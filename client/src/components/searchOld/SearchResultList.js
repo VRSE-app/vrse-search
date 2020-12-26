@@ -22,7 +22,7 @@ export default function SearchResultList({ results, searched }) {
 
         // if searched and result length is = 0 there are no results
         if (searched) {
-            return 'No Results';
+            return 'No Results found';
         }
     }
 

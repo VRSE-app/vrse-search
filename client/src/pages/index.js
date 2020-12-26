@@ -3,10 +3,7 @@ import { Link } from "gatsby";
 import axios from 'axios';
 import Layout from "../components/core/Layout";
 import SEO from "../components/seo";
-
 import SearchBar from '../components/search/SearchBar';
-import SearchResultList from "../components/search/SearchResultList";
-
 import Logo from "../assets/images/logo.svg";
 
 const Index = () => {
@@ -45,12 +42,6 @@ const Index = () => {
           searchTerm={searchTerm}
           handleChange={(value) => setSearchTerm(value)}
           handleSearch={e => handleSearch(e)}
-        />
-      </div>
-      <div className="container-md mx-auto mt-6">
-        <SearchResultList
-          results={results}
-          searched={searched}
         />
       </div>
     </Layout>
