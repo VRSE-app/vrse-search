@@ -1,7 +1,7 @@
 import React from "react";
 import SubmitButton from "../buttons/SubmitButton";
 
-export default function SearchBar({ searchTerm, handleChange, handleSearch }) {
+const SearchBar = ({ searchTerm, handleChange, handleSearch }) => {
     return (
         <form onSubmit={handleSearch} className="w-full mb-8">
             <div className="grid grid-cols-4 gap-4">
@@ -19,3 +19,5 @@ export default function SearchBar({ searchTerm, handleChange, handleSearch }) {
         </form>
     );
 }
+
+export default SearchBar;

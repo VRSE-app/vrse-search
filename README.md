@@ -129,3 +129,9 @@ npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
 
 - https://thoughts.t37.net/designing-the-perfect-elasticsearch-cluster-the-almost-definitive-guide-e614eabc1a87
 - index limit
+
+https://opensourceconnections.com/blog/2019/05/29/falsehoods-programmers-believe-about-search/
+
+## We are currently having so many problems with elastic it may be worth using Mongo for a smaller MVP so that something is working and making queries although this is in a way pushing more work further back in the project
+
+## A mongo db version of this project will likely also be far easier to deploy and set up but it will certainly be far too slow - to do something truly amazing this speed decrease will be a bottleneck but do we think you can get a great grade without making something truly amazing?

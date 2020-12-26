@@ -3,7 +3,8 @@ const path = require('path');
 const zlib = require('zlib');
 const readline = require('readline');
 require('array.prototype.flatmap');
-const { client, deleteIndex, checkConnection, initMapping, createIndex, resetIndex } = require('./connection');
+const { client, checkConnection, deleteIndex, initMapping, createIndex, resetIndex } = require('./connection');
+
 const { concat } = require('lodash');
 
 // If you want to clear everything and re-import run resetIndex()
@@ -11,6 +12,7 @@ const { concat } = require('lodash');
 // createIndex();
 // initMapping();
 // resetIndex();
+checkConnection();
 
 // const directoryFiles = fs.readdirSync('./publications');
 
@@ -132,4 +134,4 @@ async function countPublications() {
 }
 
 // countPublications();
-main();
+// main();
