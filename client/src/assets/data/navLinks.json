@@ -6,5 +6,9 @@
     {
         "label": "Feedback",
         "url": "/feedback"
-    }
+    },
+    {
+      "label": "Search",
+      "url": "/search"
+  }
 ]

@@ -5,6 +5,7 @@ import SEO from "../components/seo";
 import Layout from "../components/core/Layout";
 import DedicatedSearch from "../components/search/DedicatedSearch";
 import SearchResultsParent from "../components/search/SearchResultsParent";
+import SearchResultList from "../components/search/SearchResultList";
 
 const Search = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -20,11 +21,12 @@ const Search = () => {
             // Set the results
             .then(response => {
                 const images = response.data.results;
-
+                // we are not entering here
                 setResults(images);
             })
             // Handle no results
             .catch(error => {
+                console.log("chicken");
                 console.log('error: ', error);
                 setResults([]);
             })
@@ -43,11 +45,11 @@ const Search = () => {
                     handleChange={(value) => setSearchTerm(value)}
                     handleSearch={e => handleSearch(e)}
                 />
-                <SearchResultsParent results={results} searched={searched} />
-                {/* <SearchResultList
+                {/* <SearchResultsParent results={results} searched={searched} /> */}
+                <SearchResultList
                     results={results}
                     searched={searched}
-                /> */}
+                />
             </div>
         </Layout>
     );
