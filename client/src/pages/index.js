@@ -3,7 +3,7 @@ import { Link } from "gatsby";
 import axios from 'axios';
 import Layout from "../components/core/Layout";
 import SEO from "../components/seo";
-import SearchBar from '../components/search/SearchBar';
+import SearchBar from '../components/searchOld/SearchBar';
 import Logo from "../assets/images/logo.svg";
 
 const Index = () => {

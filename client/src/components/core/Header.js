@@ -6,7 +6,7 @@ import logo from "../../assets/images/logo.svg";
 import favicon from "../../assets/images/favicon.svg";
 
 import NavLinks from "../../assets/data/navLinks.json";
-import UserNavLinks from "../../assets/data/userNavLinks.json";
+// import UserNavLinks from "../../assets/data/userNavLinks.json";
 import useOutsideAlerter from "../../hooks/useOutsideAlerter";
 
 const Header = () => {
