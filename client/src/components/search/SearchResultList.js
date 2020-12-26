@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import SearchResultCard from "../cards/SearchResultCard";
+// import SearchResultCard from "../cards/SearchResultCard";
 
 export default function SearchResultList({ results, searched }) {
     useEffect(() => {
@@ -10,11 +10,16 @@ export default function SearchResultList({ results, searched }) {
         if (results.length > 0) {
             return (
                 results.map(image => {
+                    const title = image._source.title;
+                    const paperAbstract = image._source.paperAbstract;
+                    const fieldsOfStudy = image._source.fieldsOfStudy;
+
                     return (
-                        <SearchResultCard
-                            image={image}
-                            key={image.id}
-                        />
+                        <div>
+                            <h4>{title}</h4>
+                            <h6>{fieldsOfStudy}</h6>
+                            <p>{paperAbstract}</p>
+                        </div>
                     )
                 })
             );

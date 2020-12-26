@@ -4,7 +4,6 @@ import axios from 'axios';
 import SEO from "../components/seo";
 import Layout from "../components/core/Layout";
 import DedicatedSearch from "../components/search/DedicatedSearch";
-import SearchResultsParent from "../components/search/SearchResultsParent";
 import SearchResultList from "../components/search/SearchResultList";
 
 const Search = () => {
@@ -17,16 +16,16 @@ const Search = () => {
 
         const key = process.env.GATSBY_UNSPLASH_API_KEY;
         // replace with appropriate search query structure for API endpoint
-        axios.get(`http://localhost:3000/vrse-search/search_/?title=${key}`)
+        axios.get(`http://localhost:3000/api/v1/_search`)
             // Set the results
             .then(response => {
-                const images = response.data.results;
+                console.log(response);
+                const results = response.data.body.hits.hits;
                 // we are not entering here
-                setResults(images);
+                setResults(results);
             })
             // Handle no results
             .catch(error => {
-                console.log("chicken");
                 console.log('error: ', error);
                 setResults([]);
             })

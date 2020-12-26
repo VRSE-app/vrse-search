@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "gatsby";
 import axios from 'axios';
 import Layout from "../components/core/Layout";
 import SEO from "../components/seo";
