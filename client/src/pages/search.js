@@ -23,7 +23,6 @@ const Search = () => {
         axios.get(`http://localhost:3000/api/v1/_search/${searchTerm}`)
             // Set the results
             .then(response => {
-                console.log(response);
                 const results = response.data.body.hits.hits;
                 // we are not entering here
                 setResults(results);

@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 // import SearchResultCard from "../cards/SearchResultCard";
 
 export default function SearchResultList({ results, searched }) {
-    useEffect(() => {
-        console.log('updated results', results)
-    }, [results]);
+    // useEffect(() => {
+    //     console.log('updated results', results)
+    // }, [results]);
 
     function mapResults() {
         if (results.length > 0) {
