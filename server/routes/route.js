@@ -1,3 +1,4 @@
+const { request, response } = require('express');
 const express = require('express');
 const router = express.Router();
 
@@ -8,15 +9,14 @@ const { client } = require("../connection");
 
 var bodyParser = require("body-parser").json();
 
-router.get('/_search', (req, res) => {
-    // const searchText = req.query.text;
-
+// this should probably be refactored and cleaned up into different functions and not sure if the first thing is needed
+router.get('/_search/:input', (req, res) => {
     client.search({
         index: 'vrse-search',
         type: 'publication',
         body: {
             query: {
-                match: { title: "number theory" }
+                match: { title: req.params.input }
             }
         }
     })

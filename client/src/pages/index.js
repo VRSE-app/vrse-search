@@ -15,7 +15,7 @@ const Index = () => {
   function handleSearch(e) {
     e.preventDefault();
 
-    axios.get(`http://localhost:3000/vrse-search/search_/?title=${key}`)
+    axios.get(`http://localhost:3000/vrse-search/_search/q?=${key}`)
       // Set the results
       .then(response => {
         const images = response.data.results;

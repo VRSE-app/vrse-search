@@ -13,10 +13,11 @@ const Search = () => {
 
     function handleSearch(e) {
         e.preventDefault();
+        console.log("searchTerm: ", searchTerm);
+        console.log("Endpoint: ", `http://localhost:3000/api/v1/_search/?q=${searchTerm}`);
 
-        const key = process.env.GATSBY_UNSPLASH_API_KEY;
         // replace with appropriate search query structure for API endpoint
-        axios.get(`http://localhost:3000/api/v1/_search`)
+        axios.get(`http://localhost:3000/api/v1/_search/${searchTerm}`)
             // Set the results
             .then(response => {
                 console.log(response);
@@ -44,11 +45,15 @@ const Search = () => {
                     handleChange={(value) => setSearchTerm(value)}
                     handleSearch={e => handleSearch(e)}
                 />
-                {/* <SearchResultsParent results={results} searched={searched} /> */}
-                <SearchResultList
-                    results={results}
-                    searched={searched}
-                />
+            </div>
+            {/* <SearchResultsParent results={results} searched={searched} /> */}
+            <div className="pt-8 bg-gray-100">
+                <div className="container">
+                    <SearchResultList
+                        results={results}
+                        searched={searched}
+                    />
+                </div>
             </div>
         </Layout>
     );
