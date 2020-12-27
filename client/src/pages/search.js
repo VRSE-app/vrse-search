@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
+
+import useDebounce from "../hooks/useDebounce";
 
 import SEO from "../components/seo";
 import Layout from "../components/core/Layout";
 import DedicatedSearch from "../components/search/DedicatedSearch";
 import SearchResultList from "../components/search/SearchResultList";
 
+
 const Search = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const debouncedValue = useDebounce(searchTerm, 500);
+
     const [results, setResults] = useState([]);
     const [searched, setSearched] = useState(false);
 
     function handleSearch(e) {
         e.preventDefault();
-        console.log("searchTerm: ", searchTerm);
-        console.log("Endpoint: ", `http://localhost:3000/api/v1/_search/?q=${searchTerm}`);
 
         // replace with appropriate search query structure for API endpoint
         axios.get(`http://localhost:3000/api/v1/_search/${searchTerm}`)

@@ -14,7 +14,7 @@ export default function SearchResultList({ results, searched }) {
                     const paperAbstract = image._source.paperAbstract.substring(0, 200) + "...";
                     const fieldsOfStudy = image._source.fieldsOfStudy;
                     return (
-                        <div className="bg-white rounded px-4 py-4">
+                        <div className="bg-white rounded px-4 py-4" key={title} >
                             <h4>{title}</h4>
                             {
                                 fieldsOfStudy.length ? <div div className="border border-transparent text-base font-medium rounded-md bg-blue-900 text-white px-2 py-1 w-min"><h6>{fieldsOfStudy}</h6></div>
