@@ -3,11 +3,12 @@ import axios from 'axios';
 
 import useDebounce from "../hooks/useDebounce";
 
-import SEO from "../components/seo";
+import SEO from "../components/core/seo";
 import Layout from "../components/core/Layout";
 import DedicatedSearch from "../components/search/DedicatedSearch";
 import SearchResultList from "../components/search/SearchResultList";
 
+// const fs = require('fs')
 
 const Search = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -16,6 +17,8 @@ const Search = () => {
     const [results, setResults] = useState([]);
     const [searched, setSearched] = useState(false);
 
+    console.log({ results });
+    
     function handleSearch(e) {
         e.preventDefault();
 

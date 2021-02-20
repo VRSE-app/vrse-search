@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import Layout from "../components/core/Layout";
-import SEO from "../components/seo";
+import SEO from "../components/core/seo";
 import SearchBar from '../components/search/SearchBar';
 import Logo from "../assets/images/logo.svg";
 
