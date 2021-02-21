@@ -1,7 +1,7 @@
 function constructNetwork(data) {
     let nodes = [];
     let links = [];
-
+    console.log({data})
     data.forEach(element => {
         // assign a paper with an id to a node
         let node = {}
@@ -9,7 +9,7 @@ function constructNetwork(data) {
         node.title = element._source.title;
         node.abstract = element._source.paperAbstract;
         node.authors = element._source.authors;
-        node.score = element.score;
+        node.score = element._score;
 
         // map through incitations
         // console.log(node.inCitations);

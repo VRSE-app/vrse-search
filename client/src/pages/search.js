@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 
-import useDebounce from "../hooks/useDebounce";
+// import useDebounce from "../hooks/useDebounce";
 
 import SEO from "../components/core/seo";
 import Layout from "../components/core/Layout";
@@ -12,7 +12,7 @@ import SearchResultList from "../components/search/SearchResultList";
 
 const Search = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const debouncedValue = useDebounce(searchTerm, 500);
+    // const debouncedValue = useDebounce(searchTerm, 500);
 
     const [results, setResults] = useState([]);
     const [searched, setSearched] = useState(false);

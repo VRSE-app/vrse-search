@@ -3,7 +3,6 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export default function runForceGraph(
     container,
-    linksData,
     nodesData,
     nodeHoverTooltip
 ) {
@@ -103,6 +102,17 @@ export default function runForceGraph(
     //     .join("line")
     //     .attr("strokeWidth", d => Math.sqrt(d.value));
 
+    // const node = svg
+    //     .append("g")
+    //     .attr("stroke", "#fff")
+    //     .attr("strokeWidth", 2)
+    //     .selectAll("circle")
+    //     .data(nodes)
+    //     .join("circle")
+    //     .attr("r", bubbleSize) // this determines the size of the nodes
+    //     .attr("fill", color)
+    //     .call(drag(simulation));
+
     const node = svg
         .append("g")
         .attr("stroke", "rgb(157, 0, 160);")
@@ -112,8 +122,8 @@ export default function runForceGraph(
         .join("circle")
         .attr("r", bubbleSize) // this determines the size of the nodes
         // .attr("fill", "rgb(22, 130, 218)")
-        .attr("fill", "rgb(157, 0, 160)")
-        // .attr("class", d => `${getClass(d)}`)
+        // .attr("fill", "rgb(157, 0, 160)")
+        .attr("class", d => "fill-current text-green-600")
         .call(drag(simulation));
 
     // const label = svg.append("g")

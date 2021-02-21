@@ -36,7 +36,7 @@ const Index = () => {
     <Layout>
       <SEO title="Home" />
       <div className="container-md mx-auto align-middle pt-28">
-        <img className="h-64" src={Logo} />
+        <img className="h-64" src={Logo} alt="logo"/>
         <SearchBar
           searchTerm={searchTerm}
           handleChange={(value) => setSearchTerm(value)}
