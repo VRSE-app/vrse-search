@@ -1,56 +1,47 @@
 import * as d3 from "d3";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import styles from "./forceGraph.module.css";
+// import d3Fisheye from "d3-fisheye"
+import radial from './radial'
 
 export function runForceGraph(
     container,
     nodesData,
+    linksData,
     nodeHoverTooltip
 ) {
     const nodes = nodesData.map((d) => Object.assign({}, d));
+    const validNodes = [];
+    
+    nodesData.map((d) => validNodes.push(d.id)); // this part works
+    console.log({ validNodes });
+    var links = Object.entries(linksData).filter(entry => validNodes.includes(entry.target) && validNodes.includes(entry.target));
+    console.log({ links })
+    const linkedNodes = [... new Set(Object.values(links))]
+    // there are no nodes in the list of nodes that have sources and targets both in the search results
 
-    console.log({ nodes });
-
+    // this number shouldn't be greater than the number of nodes
+    console.log({linkedNodes}); 
+       
+    // when you get the links in remove all the links that are not in the nodes
+    /* Define Canvas Attributes */
     const containerRect = container.getBoundingClientRect();
     const height = containerRect.height;
     const width = containerRect.width;
 
+    /* Define Bubble Attributes */
     const color = () => { return "#9D00A0"; };
+    const bubbleSize = (d) => { return d.score*1.5; }
+    const getClass = (d) => { return styles.male; };
 
-    const bubbleSize = (d) => {
-        return d.score*1.5;
-    }
-
-    const getClass = (d) => {
-        return styles.male;
-    };
-
-    const drag = (simulation) => {
-        const dragstarted = (event, d) => {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
-        };
-
-        const dragged = (event, d) => {
-            d.fx = event.x;
-            d.fy = event.y;
-        };
-
-        const dragended = (event, d) => {
-            if (!event.active) simulation.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
-        };
-
-        return d3
-            .drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended);
-    };
-
-    // Add the tooltip element to the graph
+    /* Define Fish Eye Lens */
+    // const fisheye = radial()
+    //     .radius(100)
+    //     .distortion(4)
+    //     .smoothing(0.5);
+    // fisheye.focus([0, 0]);
+    
+    /* Define Tooltip */
     const tooltip = document.querySelector("#graph-tooltip");
 
     if (!tooltip) {
@@ -79,20 +70,72 @@ export function runForceGraph(
             .duration(200)
             .style("opacity", 0);
     };
+    
+    const drag = (simulation) => {
+        const dragstarted = (event, d) => {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        };
+
+        const dragged = (event, d) => {
+            d.fx = event.x;
+            d.fy = event.y;
+        };
+
+        const dragended = (event, d) => {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        };
+
+        return d3
+            .drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended);
+    };
+
+    // Add the tooltip element to the graph
 
     const simulation = d3
         .forceSimulation(nodes)
+        .force("link", d3.forceLink(links).id(d => d.id))
         .force("charge", d3.forceManyBody().strength(-150)) // changes the central force
         .force("x", d3.forceX())
         .force("y", d3.forceY());
 
+    /* Create SVG Elements */
     const svg = d3
         .select(container)
         .append("svg")
         .attr("viewBox", [-width / 2, -height / 2, width, height])
-        .call(d3.zoom().on("zoom", function (event) {
-            svg.attr("transform", event.transform);
-        }));
+    
+    // Add Zoom functionality
+    svg.call(d3.zoom().on("zoom", function (event) {
+        svg.attr("transform", event.transform);
+    }));
+
+    // magnifier as circle
+    // const lens = svg.append("circle")
+    //     .attr("class","lens")
+    //     .attr("r", fisheye.radius());;
+
+    // // magnifier as path
+    // const mag = svg.append("path")
+    //     .attr("class", "mag");
+    
+    // specify angle where magnifier handle should "attach" to body
+    // const omega = 0.78;
+
+    const link = svg
+        .append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+        .selectAll("line")
+        .data(links)
+        .join("line")
+        .attr("strokeWidth", d => Math.sqrt(d.value));
 
     const node = svg
         .append("g")
@@ -124,8 +167,15 @@ export function runForceGraph(
         .on("mouseout", () => {
             removeTooltip();
         });
-
+    
     simulation.on("tick", () => {
+        //update link positions
+        link
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
+
         // update node positions
         node
             .attr("cx", d => d.x)

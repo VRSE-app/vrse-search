@@ -10,7 +10,7 @@ export function ForceGraph({ linksData, nodesData, nodeHoverTooltip }) {
     let destroyFn;
 
     if (containerRef.current) {
-      const { destroy } = runForceGraph(containerRef.current, nodesData, nodeHoverTooltip);
+      const { destroy } = runForceGraph(containerRef.current, nodesData, linksData, nodeHoverTooltip);
       destroyFn = destroy;
     }
 
