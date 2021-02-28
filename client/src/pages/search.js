@@ -1,32 +1,37 @@
 import React, { useState } from "react";
 import axios from 'axios';
 
-import SEO from "../components/seo";
+// import useDebounce from "../hooks/useDebounce";
+
+import SEO from "../components/core/seo";
 import Layout from "../components/core/Layout";
 import DedicatedSearch from "../components/search/DedicatedSearch";
-import SearchResultsParent from "../components/search/SearchResultsParent";
 import SearchResultList from "../components/search/SearchResultList";
+
+// const fs = require('fs')
 
 const Search = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    // const debouncedValue = useDebounce(searchTerm, 500);
+
     const [results, setResults] = useState([]);
     const [searched, setSearched] = useState(false);
 
+    console.log({ results });
+    
     function handleSearch(e) {
         e.preventDefault();
 
-        const key = process.env.GATSBY_UNSPLASH_API_KEY;
         // replace with appropriate search query structure for API endpoint
-        axios.get(`http://localhost:3000/vrse-search/search_/?title=${key}`)
+        axios.get(`http://localhost:3000/api/v1/_search/${searchTerm}`)
             // Set the results
             .then(response => {
-                const images = response.data.results;
+                const results = response.data.body.hits.hits;
                 // we are not entering here
-                setResults(images);
+                setResults(results);
             })
             // Handle no results
             .catch(error => {
-                console.log("chicken");
                 console.log('error: ', error);
                 setResults([]);
             })
@@ -45,11 +50,15 @@ const Search = () => {
                     handleChange={(value) => setSearchTerm(value)}
                     handleSearch={e => handleSearch(e)}
                 />
-                {/* <SearchResultsParent results={results} searched={searched} /> */}
-                <SearchResultList
-                    results={results}
-                    searched={searched}
-                />
+            </div>
+            {/* <SearchResultsParent results={results} searched={searched} /> */}
+            <div className="pt-8 bg-gray-100">
+                <div className="container">
+                    <SearchResultList
+                        results={results}
+                        searched={searched}
+                    />
+                </div>
             </div>
         </Layout>
     );

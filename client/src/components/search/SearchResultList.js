@@ -1,20 +1,27 @@
 import React, { useEffect } from 'react';
-import SearchResultCard from "../cards/SearchResultCard";
+// import SearchResultCard from "../cards/SearchResultCard";
 
 export default function SearchResultList({ results, searched }) {
-    useEffect(() => {
-        console.log('updated results', results)
-    }, [results]);
+    // useEffect(() => {
+    //     console.log('updated results', results)
+    // }, [results]);
 
     function mapResults() {
         if (results.length > 0) {
             return (
                 results.map(image => {
+                    const title = image._source.title;
+                    const paperAbstract = image._source.paperAbstract.substring(0, 200) + "...";
+                    const fieldsOfStudy = image._source.fieldsOfStudy;
                     return (
-                        <SearchResultCard
-                            image={image}
-                            key={image.id}
-                        />
+                        <div className="bg-white rounded px-4 py-4" key={title} >
+                            <h4>{title}</h4>
+                            {
+                                fieldsOfStudy.length ? <div div className="border border-transparent text-base font-medium rounded-md bg-blue-900 text-white px-2 py-1 w-min"><h6>{fieldsOfStudy}</h6></div>
+                                    : ""
+                            }
+                            <p>{paperAbstract}</p>
+                        </div >
                     )
                 })
             );
@@ -27,7 +34,7 @@ export default function SearchResultList({ results, searched }) {
     }
 
     return (
-        <div className="grid grid-cols-3 gap-4 mt-6 mb-24">
+        <div className="flex flex-col gap-4 mt-6 pb-24">
             {mapResults()}
         </div>
     )
