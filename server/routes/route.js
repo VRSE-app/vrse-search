@@ -72,11 +72,8 @@ router.get('/_search/:input', (req, res) => {
             .catch(err => console.log(err))
             .then(responses => {
                 console.log(responses)
-                // anything below here does not run for some reason
+                // todo: remove unnecessary intermediate variable and clean up chaining
                 const extendedResult = [];
-                // const final = body.reduce((acc, cur) => {
-                //     cur.map(result => acc.push(result.body.hits))
-                // }, [])
                 responses.forEach(response => {
                     extendedResult.push(response.body.hits)
                 })
