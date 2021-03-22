@@ -6,14 +6,21 @@ const router = express.Router();
 
 const { client } = require("../connection");
 // var bodyParser = require("body-parser").json();
+function chunk(arr, chunkSize) {
+    if (chunkSize <= 0) throw "Invalid chunk size";
+    var R = [];
+    for (var i=0,len=arr.length; i<len; i+=chunkSize)
+      R.push(arr.slice(i,i+chunkSize));
+    return R;
+  }
 
 // todo: keep original results
 // todo: add incititations as well
 // todo: fix query to only return that one result (done kind of but is this what we want?)
 // todo: remove slice of only the 10 results for both the top and bottom level
 // todo: refactor and make sure it all works concurrently with elastic
-router.get('/_search/:input', (req, res) => {
-    client.search({
+router.get('/_search/:input', async (req, res) => {
+    const response = await client.search({
         index: 'vrse-search',
         type: 'publication',
         body: {
@@ -23,69 +30,43 @@ router.get('/_search/:input', (req, res) => {
             }
         }
     })
-        .then(response => {
-            const hits = response.body.hits.hits
-            const hitOutCitations = hits
-                .map(hit => hit._source.outCitations)
-                .reduce((acc, cur) => {
-                cur.map(id => {
-                    const presentInArr = acc.findIndex(itemId => id === itemId) > -1
-                    if(!presentInArr) {
-                        acc.push(id)
-                    }
-                })
-                return acc;
-            }, [])
 
-            let outCitationPromises = hitOutCitations.slice(0, 10).map(id => {
-                return new Promise((resolve, reject) => 
-                    client.search({
-                        index: 'vrse-search',
-                        type: 'publication',
-                        body: {
-                            size: 1, // todo: verify this is a good method
-                            query: {
-                                query_string: { query: id }
-                            }
-                        }
-                    }).then(data => {
-                        console.log(`resolved inside: ${data}`)
-                        resolve(data)
-                    })
-                    .catch(err => {
-                        console.log(`rejected inside: ${err}`)
-                        reject(err)
-                    })
-                )
-            })
-            
-            console.log("is this an array of promises?")
-            console.log(outCitationPromises.length)
-            return outCitationPromises
+    const hits = response.body.hits.hits
+    const hitOutCitations = hits
+        .map(hit => hit._source.outCitations)
+        .reduce((acc, cur) => {
+        cur.map(id => {
+            const presentInArr = acc.findIndex(itemId => id === itemId) > -1
+            if(!presentInArr) {
+                acc.push(id)
+            }
         })
-        .catch(err => {
-            console.log(`rejected outside: ${err}`)
-            reject(err)
+        return acc;
+    }, [])
+    const chunkedHitOutCitations = chunk(hitOutCitations.slice(0,45), 36)
+    let results = []
+    for await (const batch of chunkedHitOutCitations) {
+        let promises = batch.map((id) => {
+            console.log(`Requesting ${id}`)
+            return client.search({
+            index: 'vrse-search',
+            type: 'publication',
+            body: {
+                size: 1, // todo: verify this is a good method
+                query: {
+                    query_string: { query: id }
+                }
+            }}).then(
+                result => result.body.hits.hits
+            )
         })
-        .then(requests =>
-            Promise.all(requests.slice(0, 10))
-            .catch(err => console.log(err))
-            .then(responses => {
-                console.log(responses)
-                // todo: remove unnecessary intermediate variable and clean up chaining
-                const extendedResult = [];
-                responses.forEach(response => {
-                    extendedResult.push(response.body.hits)
-                })
-            
-                console.log(extendedResult)
-
-                return res.json(extendedResult);
-            })
-        )
-        .catch(err => {
-            return res.status(500).json({ "message": err })
-        })
+        const data = await Promise.all(promises)
+        results.push(...data)
+    }
+    res.send({
+        origin: response,
+        results
+    });
 })
 
 module.exports = router;
