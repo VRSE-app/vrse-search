@@ -6,19 +6,10 @@ function chunk(arr, chunkSize) {
     if (chunkSize <= 0) throw "Invalid chunk size";
     var R = [];
     for (var i=0,len=arr.length; i<len; i+=chunkSize)
-      R.push(arr.slice(i,i+chunkSize));
+        R.push(arr.slice(i,i+chunkSize));
     return R;
-  }
-
-function getMoreHits() {
-
 }
 
-// todo: keep original results
-// todo: add incititations as well
-// todo: fix query to only return that one result (done kind of but is this what we want?)
-// todo: remove slice of only the 10 results for both the top and bottom level
-// todo: refactor and make sure it all works concurrently with elastic
 router.get('/_search/:input', async (req, res) => {
     const response = await client.search({
         index: 'vrse-search',
@@ -103,6 +94,8 @@ router.get('/_search/:input', async (req, res) => {
         inResults.push(...data)
     }
 
+    // maybe we don't want them all in one array - maybe we want to colour the main hits differently
+    // todo: filter out dubplicates to be sure
     res.send(hits.concat(outResults, inResults));
 })
 
