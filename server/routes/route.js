@@ -1,11 +1,7 @@
-const { request, response } = require('express');
 const express = require('express');
-// const { result } = require('lodash');
 const router = express.Router();
-// const { Concurrency } = require('max-concurrency');
-
 const { client } = require("../connection");
-// var bodyParser = require("body-parser").json();
+
 function chunk(arr, chunkSize) {
     if (chunkSize <= 0) throw "Invalid chunk size";
     var R = [];
@@ -13,6 +9,10 @@ function chunk(arr, chunkSize) {
       R.push(arr.slice(i,i+chunkSize));
     return R;
   }
+
+function getMoreHits() {
+
+}
 
 // todo: keep original results
 // todo: add incititations as well
@@ -30,9 +30,10 @@ router.get('/_search/:input', async (req, res) => {
             }
         }
     })
-
+    
     const hits = response.body.hits.hits
-    const hitOutCitations = hits
+
+    const outCitations = hits
         .map(hit => hit._source.outCitations)
         .reduce((acc, cur) => {
         cur.map(id => {
@@ -43,30 +44,66 @@ router.get('/_search/:input', async (req, res) => {
         })
         return acc;
     }, [])
-    const chunkedHitOutCitations = chunk(hitOutCitations.slice(0,45), 36)
-    let results = []
-    for await (const batch of chunkedHitOutCitations) {
+
+    const inCitations = hits
+        .map(hit => hit._source.inCitations)
+        .reduce((acc, cur) => {
+        cur.map(id => {
+            const presentInArr = acc.findIndex(itemId => id === itemId) > -1
+            if(!presentInArr) {
+                acc.push(id)
+            }
+        })
+        return acc;
+    }, [])
+
+    const chunkedOutCitations = chunk(outCitations.slice(0, 100), 40)
+    const chunkedInCitations = chunk(outCitations.slice(0, 100), 40)
+
+    let inResults = []
+    let outResults = []
+
+    for await (const batch of chunkedOutCitations) {
         let promises = batch.map((id) => {
             console.log(`Requesting ${id}`)
             return client.search({
-            index: 'vrse-search',
-            type: 'publication',
-            body: {
-                size: 1, // todo: verify this is a good method
-                query: {
-                    query_string: { query: id }
+                index: 'vrse-search',
+                type: 'publication',
+                body: {
+                    size: 1, // todo: verify this is a good method
+                    query: {
+                        query_string: { query: id }
+                    }
                 }
-            }}).then(
+            }).then(
                 result => result.body.hits.hits
             )
         })
         const data = await Promise.all(promises)
-        results.push(...data)
+        outResults.push(...data)
     }
-    res.send({
-        origin: response,
-        results
-    });
+
+    for await (const batch of chunkedInCitations) {
+        let promises = batch.map((id) => {
+            console.log(`Requesting ${id}`)
+            return client.search({
+                index: 'vrse-search',
+                type: 'publication',
+                body: {
+                    size: 1, // todo: verify this is a good method
+                    query: {
+                        query_string: { query: id }
+                    }
+                }
+            }).then(
+                result => result.body.hits.hits
+            )
+        })
+        const data = await Promise.all(promises)
+        inResults.push(...data)
+    }
+
+    res.send(hits.concat(outResults, inResults));
 })
 
 module.exports = router;
