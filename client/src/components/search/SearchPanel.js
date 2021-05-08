@@ -11,7 +11,7 @@ const SearchPanel = ({title, date, author, keywords, abstract}) => {
                 {
                     keywords.map(keyword => {
                         return (
-                            <div>
+                            <div key={keyword}>
                                 <p>{keyword}</p>
                             </div>
                         )

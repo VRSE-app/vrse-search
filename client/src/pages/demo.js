@@ -12,7 +12,7 @@ export default function Demo() {
     const { links, nodes } = constructNetwork(realData)
 
     const nodeHoverTooltip = React.useCallback((node) => {
-        return `<div>${node.name}</div>`;
+        return `<div>${node.title}</div>`;
     }, []);
 
     const keywords = ["keyword 1", "keyword 2", "keyword 3"]

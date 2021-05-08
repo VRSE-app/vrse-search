@@ -14,14 +14,11 @@ export function runForceGraph(
     const validNodes = [];
     
     nodesData.map((d) => validNodes.push(d.id)); // this part works
-    console.log({ validNodes });
+    
     var links = Object.entries(linksData).filter(entry => validNodes.includes(entry.target) && validNodes.includes(entry.target));
-    console.log({ links })
+    
     const linkedNodes = [... new Set(Object.values(links))]
     // there are no nodes in the list of nodes that have sources and targets both in the search results
-
-    // this number shouldn't be greater than the number of nodes
-    console.log({linkedNodes}); 
        
     // when you get the links in remove all the links that are not in the nodes
     /* Define Canvas Attributes */
@@ -31,7 +28,7 @@ export function runForceGraph(
 
     /* Define Bubble Attributes */
     const color = () => { return "#9D00A0"; };
-    const bubbleSize = (d) => { return d.score*1.5; }
+    const bubbleSize = (d) => { return d.score; }
     const getClass = (d) => { return styles.male; };
 
     /* Define Fish Eye Lens */
@@ -101,7 +98,7 @@ export function runForceGraph(
     const simulation = d3
         .forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id))
-        .force("charge", d3.forceManyBody().strength(-150)) // changes the central force
+        .force("charge", d3.forceManyBody().strength(-250)) // changes the central force
         .force("x", d3.forceX())
         .force("y", d3.forceY());
 
@@ -157,10 +154,10 @@ export function runForceGraph(
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'central')
         .attr("class", d => `fa ${getClass(d)}`)
-        // .text(d => { return icon(d); })
+        // .text(d => { return "hi"; })
         .call(drag(simulation));
 
-    label
+    node
         .on("mouseover", (event, d) => {
             addTooltip(nodeHoverTooltip, d, event.pageX, event.pageY);
         })
