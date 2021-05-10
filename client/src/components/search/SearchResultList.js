@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import SearchResultCard from "../cards/SearchResultCard";
 
 export default function SearchResultList({ results, searched }) {

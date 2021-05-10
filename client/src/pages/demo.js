@@ -9,25 +9,33 @@ import SearchPanel from "../components/search/SearchPanel"
 export default function Demo() {
     const { links, nodes } = constructNetwork(realData)
 
-    const [panelData, setPanelData] = useState({title:"test"});
+    const tempObj = {
+        id: "id", 
+        title: "title",
+        year: "year",
+        abstract: "abstract",
+        authors: [],
+        score: "",
+        year: "",
+        s2Url: "",
+        doiUrl: "",
+        fieldsOfStudy: ""
+    }
+
+    const [panelData, setPanelData] = useState(tempObj);
 
     const nodeHoverTooltip = node => (`<div>${node.title}</div>`)
 
-    const functionThatsValueOnlyChangesWhenXDoes = useMemo(() => {
-        // do super heavy stuff
-
-        return data
-    }, [x])
     const searchPanel = (node) => {
-        console.log({node})
         const newNode = {...node}
         setPanelData(newNode)
     }
-    // check if state changes
-    useEffect(() => {
-        // this is console logging different panelData
-        console.log("in useEffect: panelData:", panelData)
-    }, [panelData])
+
+    // // check if state changes
+    // useEffect(() => {
+    //     // this is console logging different panelData
+    //     console.log("in useEffect: panelData:", panelData)
+    // }, [panelData])
     
     return (
         <Layout>

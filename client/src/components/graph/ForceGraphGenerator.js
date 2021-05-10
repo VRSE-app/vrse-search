@@ -2,13 +2,14 @@ import * as d3 from "d3";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import styles from "./forceGraph.module.css";
 // import d3Fisheye from "d3-fisheye"
-import radial from './radial'
+// import radial from './radial'
 
 export function runForceGraph(
     container,
     nodesData,
     linksData,
-    nodeHoverTooltip
+    nodeHoverTooltip,
+    searchPanel
 ) {
     const nodes = nodesData.map((d) => Object.assign({}, d));
     const validNodes = [];
@@ -17,7 +18,8 @@ export function runForceGraph(
     
     var links = Object.entries(linksData).filter(entry => validNodes.includes(entry.target) && validNodes.includes(entry.target));
     
-    const linkedNodes = [... new Set(Object.values(links))]
+    // todo: uncomment to add back links
+    // const linkedNodes = [...new Set(Object.values(links))]
     // there are no nodes in the list of nodes that have sources and targets both in the search results
        
     // when you get the links in remove all the links that are not in the nodes
@@ -31,16 +33,9 @@ export function runForceGraph(
     const bubbleSize = (d) => { return d.score; }
     const getClass = (d) => { return styles.male; };
 
-    /* Define Fish Eye Lens */
-    // const fisheye = radial()
-    //     .radius(100)
-    //     .distortion(4)
-    //     .smoothing(0.5);
-    // fisheye.focus([0, 0]);
-    
     /* Define Tooltip */
-    const tooltip = document.querySelector("#graph-tooltip");
-
+    const tooltip = document.querySelector("#graph-tooltip")
+    
     if (!tooltip) {
         const tooltipDiv = document.createElement("div");
         tooltipDiv.classList.add(styles.tooltip);
@@ -48,26 +43,36 @@ export function runForceGraph(
         tooltipDiv.id = "graph-tooltip";
         document.body.appendChild(tooltipDiv);
     }
+    
+    // don't have to check if graph-panel exists because we know it does
+    const divPanel = d3.select("#graph-panel")
+    
+    const divTooltip = d3.select("#graph-tooltip");
 
-    const div = d3.select("#graph-tooltip");
-    const addTooltip = (hoverTooltip, d, x, y) => {
-        div
+    const addTooltip = (d, x, y) => {
+        divTooltip
             .transition()
             .duration(200)
             .style("opacity", 0.9);
-        div
-            .html(hoverTooltip(d))
+        divTooltip
+            .html(nodeHoverTooltip(d))
             .style("left", `${x}px`)
             .style("top", `${y - 28}px`);
     };
 
     const removeTooltip = () => {
-        div
+        divTooltip
             .transition()
             .duration(200)
             .style("opacity", 0);
     };
     
+    const updatePanel = (d, x, y) => {
+        divPanel
+            .html(searchPanel(d))
+            // .data(d)
+    }
+
     const drag = (simulation) => {
         const dragstarted = (event, d) => {
             if (!event.active) simulation.alphaTarget(0.3).restart();
@@ -113,18 +118,6 @@ export function runForceGraph(
         svg.attr("transform", event.transform);
     }));
 
-    // magnifier as circle
-    // const lens = svg.append("circle")
-    //     .attr("class","lens")
-    //     .attr("r", fisheye.radius());;
-
-    // // magnifier as path
-    // const mag = svg.append("path")
-    //     .attr("class", "mag");
-    
-    // specify angle where magnifier handle should "attach" to body
-    // const omega = 0.78;
-
     const link = svg
         .append("g")
         .attr("stroke", "#999")
@@ -159,12 +152,13 @@ export function runForceGraph(
 
     node
         .on("mouseover", (event, d) => {
-            addTooltip(nodeHoverTooltip, d, event.pageX, event.pageY);
+            addTooltip(d, event.pageX, event.pageY);
+            updatePanel(d, event.pageX, event.pageY);
         })
         .on("mouseout", () => {
             removeTooltip();
         });
-    
+
     simulation.on("tick", () => {
         //update link positions
         link
