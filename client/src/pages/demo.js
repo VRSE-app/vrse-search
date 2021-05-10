@@ -1,9 +1,7 @@
-import React from "react"
-import { Link } from "gatsby"
+import React, { useState, useCallback, useEffect } from "react"
 import { constructNetwork } from '../utils/constructNetwork'
 
 import realData from '../assets/data/oman.json'
-// import data from '../assets/data/data.json'
 import Layout from "../components/core/Layout"
 import { ForceGraph } from "../components/graph/ForceGraph"
 import SearchPanel from "../components/search/SearchPanel"
@@ -11,22 +9,56 @@ import SearchPanel from "../components/search/SearchPanel"
 export default function Demo() {
     const { links, nodes } = constructNetwork(realData)
 
-    const nodeHoverTooltip = React.useCallback((node) => {
-        return `<div>${node.title}</div>`;
-    }, []);
+    const [panelData, setPanelData] = useState({title:"test"});
 
-    const keywords = ["keyword 1", "keyword 2", "keyword 3"]
+    const nodeHoverTooltip = node => (`<div>${node.title}</div>`)
 
+    const functionThatsValueOnlyChangesWhenXDoes = useMemo(() => {
+        // do super heavy stuff
+
+        return data
+    }, [x])
+    const searchPanel = (node) => {
+        console.log({node})
+        const newNode = {...node}
+        setPanelData(newNode)
+    }
+    // check if state changes
+    useEffect(() => {
+        // this is console logging different panelData
+        console.log("in useEffect: panelData:", panelData)
+    }, [panelData])
+    
     return (
         <Layout>
             <div className="grid grid-cols-12">
                 <div className="col-span-9">
-                    <ForceGraph linksData={links} nodesData={nodes} nodeHoverTooltip={nodeHoverTooltip} />
+                    <ForceGraph 
+                        linksData={links}
+                        nodesData={nodes}
+                        nodeHoverTooltip={nodeHoverTooltip}
+                        searchPanel={searchPanel} 
+                    />
                 </div>
                 <div className="col-span-3">
-                    <SearchPanel title="title" date="01-01-1111" author="Author" keywords={keywords} abstract="abstract goes here"/>
+                    <SearchPanel 
+                        // this does not update
+                        node={panelData}
+                        onChange={searchPanel}
+                    />
                 </div>
             </div>
         </Layout>
     )
 }
+
+// const searchPanel = (node) => {
+    //     console.log(node.title)
+
+    //     setPanelData(node.title)
+    //     console.log({ panelData })
+    // }
+
+    // const searchPanel = (node) => {
+    //     setPanelData(node)
+    // }
