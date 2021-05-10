@@ -15,23 +15,29 @@ export function runForceGraph(
     const validNodes = [];
     
     nodesData.map((d) => validNodes.push(d.id)); // this part works
-    
+
     var links = Object.entries(linksData).filter(entry => validNodes.includes(entry.target) && validNodes.includes(entry.target));
     
     // todo: uncomment to add back links
+    // When you get the links in remove all the links that are not in the nodes
     // const linkedNodes = [...new Set(Object.values(links))]
     // there are no nodes in the list of nodes that have sources and targets both in the search results
-       
-    // when you get the links in remove all the links that are not in the nodes
+    
     /* Define Canvas Attributes */
     const containerRect = container.getBoundingClientRect();
     const height = containerRect.height;
     const width = containerRect.width;
 
     /* Define Bubble Attributes */
-    const color = () => { return "#9D00A0"; };
-    const bubbleSize = (d) => { return d.score; }
-    const getClass = (d) => { return styles.male; };
+    const bubbleSize = (d) => d.score
+
+    const bubbleColor = (d) => { 
+        const yearToColor = d3.scaleSequential()
+        .domain([1900, 2021])
+        .interpolator(d3.interpolateRainbow);
+    
+        return yearToColor(d.year)
+    }
 
     /* Define Tooltip */
     const tooltip = document.querySelector("#graph-tooltip")
@@ -43,10 +49,7 @@ export function runForceGraph(
         tooltipDiv.id = "graph-tooltip";
         document.body.appendChild(tooltipDiv);
     }
-    
-    // don't have to check if graph-panel exists because we know it does
-    const divPanel = d3.select("#graph-panel")
-    
+        
     const divTooltip = d3.select("#graph-tooltip");
 
     const addTooltip = (d, x, y) => {
@@ -67,14 +70,16 @@ export function runForceGraph(
             .style("opacity", 0);
     };
     
+    /* Sidebar Logic */
+    const divPanel = d3.select("#graph-panel")
+
     const updatePanel = (d, x, y) => {
         divPanel
             .html(searchPanel(d))
-            // .data(d)
     }
 
     const drag = (simulation) => {
-        const dragstarted = (event, d) => {
+        const dragStarted = (event, d) => {
             if (!event.active) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
             d.fy = d.y;
@@ -85,7 +90,7 @@ export function runForceGraph(
             d.fy = event.y;
         };
 
-        const dragended = (event, d) => {
+        const dragEnded = (event, d) => {
             if (!event.active) simulation.alphaTarget(0);
             d.fx = null;
             d.fy = null;
@@ -93,9 +98,9 @@ export function runForceGraph(
 
         return d3
             .drag()
-            .on("start", dragstarted)
+            .on("start", dragStarted)
             .on("drag", dragged)
-            .on("end", dragended);
+            .on("end", dragEnded);
     };
 
     // Add the tooltip element to the graph
@@ -113,11 +118,6 @@ export function runForceGraph(
         .append("svg")
         .attr("viewBox", [-width / 2, -height / 2, width, height])
     
-    // Add Zoom functionality
-    svg.call(d3.zoom().on("zoom", function (event) {
-        svg.attr("transform", event.transform);
-    }));
-
     const link = svg
         .append("g")
         .attr("stroke", "#999")
@@ -134,8 +134,8 @@ export function runForceGraph(
         .selectAll("circle")
         .data(nodes)
         .join("circle")
-        .attr("r", bubbleSize) // this determines the size of the nodes
-        .attr("fill", color)
+        .attr("r", bubbleSize)
+        .attr("fill", bubbleColor)
         .call(drag(simulation));
 
     const label = svg.append("g")
@@ -146,8 +146,7 @@ export function runForceGraph(
         .append("text")
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'central')
-        .attr("class", d => `fa ${getClass(d)}`)
-        // .text(d => { return "hi"; })
+        // .text(d => "hi")
         .call(drag(simulation));
 
     node
@@ -174,16 +173,19 @@ export function runForceGraph(
 
         // update label positions
         label
-            .attr("x", d => { return d.x; })
-            .attr("y", d => { return d.y; })
+            .attr("x", d => d.x)
+            .attr("y", d => d.y)
     });
+
+    // Add Zoom functionality
+    svg.call(d3.zoom().on("zoom", function (event) {
+        svg.attr("transform", event.transform);
+    }));
 
     return {
         destroy: () => {
             simulation.stop();
         },
-        nodes: () => {
-            return svg.node();
-        }
+        nodes: () => svg.node()
     };
 }
