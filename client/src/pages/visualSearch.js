@@ -6,6 +6,7 @@ import { ForceGraph } from "../components/graph/ForceGraph"
 import SearchPanel from "../components/search/SearchPanel"
 import axios from 'axios'
 import DedicatedSearch from "../components/search/DedicatedSearch"
+import SubmitButton from "../components/buttons/SubmitButton"
 
 export default function VisualSearch() {
     const tempObj = {
@@ -20,46 +21,28 @@ export default function VisualSearch() {
         fieldsOfStudy: ""
     }
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [results, setResults] = useState([]);
-    const [nodes, setNodes] = useState([])
-    const [links, setLinks] = useState([])
-    // var { links, nodes } = constructNetwork(results);
-    // const [searched, setSearched] = useState(false);
+    const [value, setValue] = useState('')
+    const [results, setResults] = useState([])
+    const [network, setNetwork] = useState({nodes:[], links:[]})
+
+    const handleChange = (e) => setValue(e.target.value)
     
-    const [panelData, setPanelData] = useState(tempObj);
-
-    const nodeHoverTooltip = node => (`<div>${node.title}</div>`)
-
-    const searchPanel = (node) => {
-        const newNode = {...node}
-        setPanelData(newNode)
-    }
-
-    // const searchNodes = () => {
+    // const handleNetworkChange = () => {
+    //     console.log("in handleNetworkChange: results:", results)
     //     const newArr = constructNetwork(results)
-    //     setNodes(newArr.nodes)
+    //     setNetwork(newArr)
     // }
 
-    // const searchLinks = () => {
-    //     const newArr = constructNetwork(results)
-    //     setLinks(newArr.links)
-    // }
-
-    function handleSearch(e) {
+    const handleSearch = (e) => {
         e.preventDefault();
 
         // replace with appropriate search query structure for API endpoint
-        axios.get(`http://localhost:3000/api/v1/_search/${searchTerm}`)
+        axios.get(`http://localhost:3000/api/v1/_search/${value}`)
             // Set the results
             .then(response => {
                 const results = response.data
                 console.log({ results })
-                // we are not entering here
                 setResults(results);
-                // const newArr = constructNetwork(results)
-                // setNodes(newArr.nodes)
-                // setLinks(newArr.links)
             })
             // Handle no results
             .catch(error => {
@@ -71,6 +54,15 @@ export default function VisualSearch() {
             // });
     }
 
+    const [panelData, setPanelData] = useState(tempObj);
+
+    const nodeHoverTooltip = node => (`<div>${node.title}</div>`)
+
+    const searchPanel = (node) => {
+        const newNode = {...node}
+        setPanelData(newNode)
+    }
+
     // check if state changes -> if results changes update links and nodes
     // todo: should I be using useLayoutEffect?
     // todo: write post about different hooks
@@ -78,47 +70,55 @@ export default function VisualSearch() {
         // this is console logging different panelData    
         console.log("in useEffect: results:", results)
         const newArr = constructNetwork(results)
-        setNodes(newArr.nodes)
-        setLinks(newArr.links)
+        setNetwork(newArr)
     }, [results])
-
-    useEffect(() => {
-        // this is console logging different panelData    
-        console.log("in useEffect: nodesNew:", nodes)
-    }, [nodes])
-
-    useEffect(() => {
-        // this is console logging different panelData    
-        console.log("in useEffect: linksNew:", links) 
-    }, [links])
 
     return (
         <Layout>
             <div className="container pt-8">
                 <h3 className="py-4">Search...</h3>
-                <DedicatedSearch
-                    searchTerm={searchTerm}
-                    handleChange={(value) => setSearchTerm(value)}
-                    handleSearch={e => handleSearch(e)}
-                />
-            </div>
-            <div className="grid grid-cols-12">
-                <div className="col-span-9">
-                    <ForceGraph 
-                        nodesData={nodes}
-                        linksData={links}
-                        nodeHoverTooltip={nodeHoverTooltip}
-                        searchPanel={searchPanel} 
-                    />
-                </div>
-                <div className="col-span-3">
-                    <SearchPanel 
-                        // this does not update
-                        node={panelData}
-                        onChange={searchPanel}
-                    />
-                </div>
+                <form onSubmit={handleSearch} className="w-full mb-8">
+                    <div className="grid grid-cols-4 gap-4">
+                        <input
+                            value={value}
+                            onChange={handleChange}
+                            className="col-span-4 sm:col-span-3 bg-white border p-3 mr-3 rounded text-gray-600 w-full"
+                            placeholder="Explore publications..."
+                        />
+                        <SubmitButton
+                            type="submit"
+                            text="Search"
+                        />
+                    </div>
+                </form>
+                
+                {
+                    network.length != 0 ? (
+                        <div className="col-span-9">
+                            <ForceGraph
+                                nodesData={network.nodes}
+                                linksData={network.links}
+                                nodeHoverTooltip={nodeHoverTooltip}
+                                searchPanel={searchPanel} 
+                            />
+                        </div>
+                    ) : 
+                    <p>Loading</p>
+                }
+
+                { results.map(result => <div>hi</div>) }
             </div>
         </Layout>
     )
 }
+
+{/* <div className="grid grid-cols-12">
+    
+    <div className="col-span-3">
+        <SearchPanel 
+            // this does not update
+            node={panelData}
+            onChange={searchPanel}
+        />
+    </div>
+</div> */}

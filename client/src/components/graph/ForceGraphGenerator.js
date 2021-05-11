@@ -11,6 +11,8 @@ export function runForceGraph(
     nodeHoverTooltip,
     searchPanel
 ) {
+    console.log({nodesData})
+    console.log({linksData})
     const nodes = nodesData.map((d) => Object.assign({}, d));
     const validNodes = [];
     
