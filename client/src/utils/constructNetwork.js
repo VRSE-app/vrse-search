@@ -2,6 +2,7 @@
 const { scaleScore } = require("./scaleScore")
 
 function constructNetwork(data) {
+    console.log({data})
     let nodes = []
     let links = []
 
@@ -71,6 +72,7 @@ function constructNetwork(data) {
     newArr.nodes = nodes;
     newArr.links = links;
 
+    console.log({ newArr })
     return newArr;
 }
 

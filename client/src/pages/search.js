@@ -16,8 +16,6 @@ const Search = () => {
 
     const [results, setResults] = useState([]);
     const [searched, setSearched] = useState(false);
-
-    console.log({ results });
     
     function handleSearch(e) {
         e.preventDefault();
@@ -26,7 +24,8 @@ const Search = () => {
         axios.get(`http://localhost:3000/api/v1/_search/${searchTerm}`)
             // Set the results
             .then(response => {
-                const results = response.data.body.hits.hits;
+                const results = response.data
+                console.log({ results })
                 // we are not entering here
                 setResults(results);
             })

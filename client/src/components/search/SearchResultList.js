@@ -9,18 +9,20 @@ export default function SearchResultList({ results, searched }) {
     function mapResults() {
         if (results.length > 0) {
             return (
-                results.map(image => {
-                    const title = image._source.title;
-                    const paperAbstract = image._source.paperAbstract.substring(0, 200) + "...";
-                    const fieldsOfStudy = image._source.fieldsOfStudy;
+                results.map(result => {
+                    const id = result.id
+                    const title = result._source.title;
+                    const paperAbstract = result._source.paperAbstract.substring(0, 200) + "...";
+                    const fieldsOfStudy = result._source.fieldsOfStudy;
                     return (
-                        <div className="bg-white rounded px-4 py-4" key={title} >
+                        <div className="bg-white rounded px-4 py-4" key={id} >
                             <h4>{title}</h4>
                             {
-                                fieldsOfStudy.length ? <div div className="border border-transparent text-base font-medium rounded-md bg-blue-900 text-white px-2 py-1 w-min"><h6>{fieldsOfStudy}</h6></div>
-                                    : ""
+                                fieldsOfStudy.length >= 1 ? <div className="border border-transparent text-base font-medium rounded-md bg-blue-900 text-white px-2 py-1 w-min"><h6>{fieldsOfStudy}</h6></div> : <div></div>
                             }
-                            <p>{paperAbstract}</p>
+                            {
+                                paperAbstract.length === 3 ? <p>No abstract found</p> : <p>{paperAbstract}</p>
+                            }
                         </div >
                     )
                 })
