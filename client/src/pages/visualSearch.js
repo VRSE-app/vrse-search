@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 
 import Layout from '../components/core/Layout'
@@ -7,8 +7,6 @@ import SearchPanel from '../components/search/SearchPanel'
 import SubmitButton from '../components/buttons/SubmitButton'
 
 import { constructNetwork } from '../utils/constructNetwork'
-
-import Logo from "../assets/images/logo.svg";
 
 const VisualSearch = () => {
     // todo: this should be proptypes or some typescript thing right?
