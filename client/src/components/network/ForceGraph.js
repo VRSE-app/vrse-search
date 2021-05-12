@@ -14,7 +14,15 @@ const ForceGraph = (props) => {
     useEffect(() => {
         if (nodes != null && links != null) {
             const validNodes = []
-            nodes.forEach((d) => validNodes.push(d.id))
+            nodes.forEach((d) => {
+                validNodes.push(d.id)
+
+        
+                // also get earliest and latest year
+            })
+
+            var earliestYear = Math.min(...nodes.map(node => node.year));
+            var latestYear = Math.max(...nodes.map(node => node.year));
 
             // filter out links to nodes not in the network
             const filteredLinks = Object.entries(links)
@@ -40,9 +48,11 @@ const ForceGraph = (props) => {
             const bubbleSize = (d) => d.score * 0.8
         
             const bubbleColor = (d) => { 
+                // should make start and end year the start and end of this set of data
                 const yearToColor = d3.scaleSequential()
-                .domain([1900, 2021])
-                .interpolator(d3.interpolateRainbow);
+                .domain([earliestYear, latestYear])
+                .interpolator(d3.interpolatePurples);
+                // .interpolator(d3.interpolateBlues);
                 
                 return yearToColor(d.year)
             }

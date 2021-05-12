@@ -98,14 +98,16 @@ const NetworkPage = () => {
 
 export default NetworkPage
 
-// todo: fix box sizing
-// todo: clean up code and remove all unused versions of this file
+// todo: clean up code / performance optimisations
 // todo: unify two search experiences
 // todo: make progress on report
 // todo: send bob email update again
 // todo: check deadlines for this project... 
 // todo: start planning data upload
+// todo: clear network on new search
 
 // DONE
 // todo: add back nodeHoverToolTip
 // todo: add back searchPanel
+// todo: fix box sizing
+// todo: single colour scale for search representing year based on follow up with some of the user interviews
