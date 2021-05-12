@@ -3,14 +3,28 @@ import axios from 'axios'
 
 import Layout from '../components/core/Layout'
 import ForceGraph from '../components/network/ForceGraph'
-import { constructNetwork } from '../utils/constructNetwork'
+import SearchPanel from '../components/search/SearchPanel'
+import SubmitButton from '../components/buttons/SubmitButton'
 
+import { constructNetwork } from '../utils/constructNetwork'
 const NetworkPage = () => {
+    const tempObj = {
+        id: "",
+        title: "",
+        year: "",
+        abstract: "",
+        authors: [],
+        score: "",
+        s2Url: "",
+        doiUrl: "",
+        fieldsOfStudy: ""
+    }
+
     const [value, setValue] = useState('')
     const [network, setNetwork] = useState({})
+    const [panelData, setPanelData] = useState(tempObj);
 
     const handleChange = (e) => setValue(e.target.value)
-    
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -29,26 +43,50 @@ const NetworkPage = () => {
             })
     }
 
+    const nodeHoverTooltip = node => (`<div>${node.title}</div>`)
+
+    const searchPanel = (node) => {
+        const newNode = {...node}
+        setPanelData(newNode)
+    }
+
     return (
         <Layout>
             <div className="container pt-8">
-                <form onSubmit={handleSubmit}>
-                    <input
-                        value={value}
-                        onChange={handleChange}
-                        placeholder="Search..."
-                    />
-                    <button type="submit" className="submit-btn">
-                        Search
-                    </button>
+                <h3 className="py-4">Search...</h3>
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-full mb-8"
+                >
+                    <div className="grid grid-cols-4 gap-4">
+                        <input
+                            value={value}
+                            onChange={handleChange}
+                            className="col-span-4 sm:col-span-3 bg-white border p-3 mr-3 rounded text-gray-600 w-full"
+                            placeholder="Search..."
+                        />
+                        <SubmitButton 
+                            type="submit"
+                            text="Search"
+                        />
+                    </div>
                 </form>
             </div>
-            <div className="container">
-                <ForceGraph
-                    data={network}
-                    width={`100%`}
-                    height={`100%`}
-                />
+            <div className="grid grid-cols-12">
+                <div className="col-span-9">
+                    <ForceGraph
+                        data={network}
+                        nodeHoverTooltip={nodeHoverTooltip}
+                        searchPanel={searchPanel}
+                    />
+                </div>
+                <div className="col-span-3">
+                    <SearchPanel 
+                        // this does not update
+                        node={panelData}
+                        onChange={searchPanel}
+                    />
+                </div>
             </div>
         </Layout>
     )
@@ -56,22 +94,11 @@ const NetworkPage = () => {
 
 export default NetworkPage
 
-
-//     const [data, setData] = useState(0);
-
-//     const changeData = () => {
-//         setData(constructNetwork(data))
-//     }
-
-//     useEffect(
-//         () => {
-//             setData(constructNetwork())
-//         }, [!data]
-//     )
-
-//     return (
-//         <div>
-//             <button onClick={changeData}>Transform</button>
-//             <ForceGraph={data} />
-//         </div>
-//     )
+// todo: fix box sizing
+// todo: add back nodeHoverToolTip
+// todo: add back searchPanel
+// todo: clean up code and remove all unused versions of this file
+// todo: unify two search experiences
+// todo: make progress on report
+// todo: check deadlines for this project... 
+// todo: start planning data upload
