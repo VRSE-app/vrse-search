@@ -1,67 +1,80 @@
-import React, { useState } from "react";
-import axios from 'axios';
+import React, { useState } from 'react'
+import axios from 'axios'
 
-// import useDebounce from "../hooks/useDebounce";
-
-import SEO from "../components/core/seo";
-import Layout from "../components/core/Layout";
-import DedicatedSearch from "../components/search/DedicatedSearch";
-import SearchResultList from "../components/search/SearchResultList";
-
-// const fs = require('fs')
+import Layout from '../components/core/Layout'
+import SubmitButton from '../components/buttons/SubmitButton'
+import SearchResultList from '../components/search/SearchResultList'
 
 const Search = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    // const debouncedValue = useDebounce(searchTerm, 500);
+    const [value, setValue] = useState('')
+    const [results, setResults] = useState([])
+    const [searched, setSearched] = useState(false)
 
-    const [results, setResults] = useState([]);
-    const [searched, setSearched] = useState(false);
+    const handleChange = (e) => setValue(e.target.value)
 
-    console.log({ results });
-    
-    function handleSearch(e) {
-        e.preventDefault();
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        
+        console.log({value})
 
-        // replace with appropriate search query structure for API endpoint
-        axios.get(`http://localhost:3000/api/v1/_search/${searchTerm}`)
-            // Set the results
+        axios.get(`http://localhost:3000/api/v1/_search/${value}`)
             .then(response => {
-                const results = response.data.body.hits.hits;
-                // we are not entering here
-                setResults(results);
+                const newResults = response.data
+                setResults(newResults)
             })
-            // Handle no results
             .catch(error => {
-                console.log('error: ', error);
-                setResults([]);
+                console.log({error})
             })
-            .finally(() => {
-                setSearched(true);
-            });
+            .finally(() => setSearched(true))
     }
 
     return (
-        <Layout>
-            <SEO title="Home" />
-            <div className="container pt-8">
-                <h3 className="py-4">Search...</h3>
-                <DedicatedSearch
-                    searchTerm={searchTerm}
-                    handleChange={(value) => setSearchTerm(value)}
-                    handleSearch={e => handleSearch(e)}
-                />
-            </div>
-            {/* <SearchResultsParent results={results} searched={searched} /> */}
-            <div className="pt-8 bg-gray-100">
-                <div className="container">
-                    <SearchResultList
-                        results={results}
-                        searched={searched}
-                    />
+        <div className="bg-gray-100">
+            <Layout>
+                <div className="container-md mx-auto align-middle pt-8">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="w-full mb-8"
+                    >
+                        <div className="grid grid-cols-4 gap-4">
+                            <input
+                                value={value}
+                                onChange={handleChange}
+                                className="col-span-4 sm:col-span-3 bg-white border p-3 mr-3 rounded text-gray-600 w-full"
+                                placeholder="Search..."
+                            />
+                            <SubmitButton 
+                                type="submit"
+                                text="Search"
+                            />
+                        </div>
+                    </form>
                 </div>
-            </div>
-        </Layout>
-    );
+                <div className="bg-gray-100">
+                    <div className="container">
+                        <SearchResultList 
+                            results={results} 
+                            searched={searched}
+                        />
+                    </div>
+                </div>
+            </Layout>
+        </div>
+    )
 }
 
-export default Search;
+export default Search
+
+// todo: make progress on report
+// todo: send bob email update again
+// todo: check deadlines for this project... 
+// todo: start planning data upload
+// todo: clear network on new search
+
+// DONE
+// todo: add back nodeHoverToolTip
+// todo: add back searchPanel
+// todo: fix box sizing
+// todo: single colour scale for search representing year based on follow up with some of the user interviews
+// todo: clean up code / performance optimisations
+// todo: unify two search experiences

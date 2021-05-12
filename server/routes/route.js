@@ -4,7 +4,8 @@ const { client } = require("../connection");
 
 router.get('/_search/:input', async (req, res) => {
     const articles = []
-    let response
+    let response = []
+    
     response = await client.search({
         index: 'vrse-search',
         type: 'publication',
@@ -18,8 +19,8 @@ router.get('/_search/:input', async (req, res) => {
 
     const ids = new Set()
     response.body.hits.hits.forEach(article => {
-        article._source.inCitations.forEach(citation => ids.add(citation))
-        article._source.outCitations.forEach(citation => ids.add(citation))
+        article._source.inCitations.forEach(id => ids.add(id))
+        article._source.outCitations.forEach(id => ids.add(id))
         articles.push(article)
     });
 
@@ -34,7 +35,10 @@ router.get('/_search/:input', async (req, res) => {
     })
 
     response.body.hits.hits.forEach(article => articles.push(article))
+
+    console.log(articles)
     res.send(articles)
+    console.log(articles)
 })
 
 module.exports = router;

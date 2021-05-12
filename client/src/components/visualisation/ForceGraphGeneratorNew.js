@@ -49,34 +49,34 @@ export default function runForceGraph(
     };
 
     // Add the tooltip element to the graph
-    // const tooltip = document.querySelector("#graph-tooltip");
+    const tooltip = document.querySelector("#graph-tooltip");
 
-    // if (!tooltip) {
-    //     const tooltipDiv = document.createElement("div");
-    //     tooltipDiv.classList.add('tooltip');
-    //     tooltipDiv.style.opacity = "0";
-    //     tooltipDiv.id = "graph-tooltip";
-    //     document.body.appendChild(tooltipDiv);
-    // }
+    if (!tooltip) {
+        const tooltipDiv = document.createElement("div");
+        tooltipDiv.classList.add('tooltip');
+        tooltipDiv.style.opacity = "0";
+        tooltipDiv.id = "graph-tooltip";
+        document.body.appendChild(tooltipDiv);
+    }
 
-    // const div = d3.select("#graph-tooltip");
-    // const addTooltip = (hoverTooltip, d, x, y) => {
-    //     div
-    //         .transition()
-    //         .duration(200)
-    //         .style("opacity", 0.9);
-    //     div
-    //         .html(hoverTooltip(d))
-    //         .style("left", `${x}px`)
-    //         .style("top", `${y - 28}px`);
-    // };
+    const div = d3.select("#graph-tooltip");
+    const addTooltip = (hoverTooltip, d, x, y) => {
+        div
+            .transition()
+            .duration(200)
+            .style("opacity", 0.9);
+        div
+            .html(hoverTooltip(d))
+            .style("left", `${x}px`)
+            .style("top", `${y - 28}px`);
+    };
 
-    // const removeTooltip = () => {
-    //     div
-    //         .transition()
-    //         .duration(200)
-    //         .style("opacity", 0);
-    // };
+    const removeTooltip = () => {
+        div
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    };
 
     const simulation = d3
         .forceSimulation(nodes)
@@ -126,23 +126,23 @@ export default function runForceGraph(
         .attr("class", d => "fill-current text-green-600")
         .call(drag(simulation));
 
-    // const label = svg.append("g")
-    //     .attr("class", "labels")
-    //     .selectAll("text")
-    //     .data(nodes)
-    //     .enter()
-    //     .append("text")
-    //     .attr('text-anchor', 'middle')
-    //     .attr('dominant-baseline', 'central')
-    //     .attr("class", d => `fa ${getClass(d)}`)
-    //     .call(drag(simulation));
+    const label = svg.append("g")
+        .attr("class", "labels")
+        .selectAll("text")
+        .data(nodes)
+        .enter()
+        .append("text")
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'central')
+        .attr("class", d => `fa ${getClass(d)}`)
+        .call(drag(simulation));
 
-    // label.on("mouseover", (event, d) => {
-    //     addTooltip(nodeHoverTooltip, d, event.pageX, event.pageY);
-    // })
-        // .on("mouseout", () => {
-        //     removeTooltip();
-        // });
+    label.on("mouseover", (event, d) => {
+        addTooltip(nodeHoverTooltip, d, event.pageX, event.pageY);
+    })
+        .on("mouseout", () => {
+            removeTooltip();
+        });
 
     simulation.on("tick", () => {
         //update link positions
@@ -158,9 +158,9 @@ export default function runForceGraph(
             .attr("cy", d => d.y);
 
         // update label positions
-        // label
-        //     .attr("x", d => { return d.x; })
-        //     .attr("y", d => { return d.y; })
+        label
+            .attr("x", d => { return d.x; })
+            .attr("y", d => { return d.y; })
     });
 
     return {

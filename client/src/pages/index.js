@@ -7,31 +7,14 @@ import Logo from "../assets/images/logo.svg";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState([]);
   const [searched, setSearched] = useState(false);
 
   const key = process.env.GATSBY_UNSPLASH_API_KEY;
 
-  function handleSearch(e) {
-    e.preventDefault();
+  const handleSearch = () => {
 
-    axios.get(`http://localhost:3000/vrse-search/_search/q?=${key}`)
-      // Set the results
-      .then(response => {
-        const images = response.data.results;
-
-        setResults(images);
-      })
-      // Handle no results
-      .catch(error => {
-        console.log('error: ', error);
-        setResults([]);
-      })
-      .finally(() => {
-        setSearched(true);
-      });
   }
-
+  
   return (
     <Layout>
       <SEO title="Home" />
