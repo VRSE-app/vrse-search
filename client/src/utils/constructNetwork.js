@@ -63,7 +63,7 @@ function constructNetwork(data) {
                 node.score = 10
                 break
             default:
-                node.score = scaleScore(node.score, [Math.min(...scores), Math.max(...scores)], [10,40])
+                node.score = scaleScore(node.score, [Math.min(...scores), Math.max(...scores)], [7,45])
         }
     })
 

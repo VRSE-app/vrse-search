@@ -11,10 +11,7 @@ const SearchBar = ({ searchTerm, handleChange, handleSearch }) => {
                     className="col-span-4 sm:col-span-3 bg-white border p-3 mr-3 rounded text-gray-600 w-full"
                     placeholder="Explore publications..."
                 />
-                <SubmitButton
-                    type="submit"
-                    text="Search"
-                />
+                <a type="submit" className="submit-btn" href={`/search?${searchTerm}`}>Search</a>
             </div>
         </form>
     );
