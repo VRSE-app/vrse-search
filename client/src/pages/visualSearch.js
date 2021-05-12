@@ -111,14 +111,3 @@ export default function VisualSearch() {
         </Layout>
     )
 }
-
-{/* <div className="grid grid-cols-12">
-    
-    <div className="col-span-3">
-        <SearchPanel 
-            // this does not update
-            node={panelData}
-            onChange={searchPanel}
-        />
-    </div>
-</div> */}

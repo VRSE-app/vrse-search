@@ -72,22 +72,26 @@ const NetworkPage = () => {
                     </div>
                 </form>
             </div>
-            <div className="grid grid-cols-12">
-                <div className="col-span-9">
-                    <ForceGraph
-                        data={network}
-                        nodeHoverTooltip={nodeHoverTooltip}
-                        searchPanel={searchPanel}
-                    />
-                </div>
-                <div className="col-span-3">
-                    <SearchPanel 
-                        // this does not update
-                        node={panelData}
-                        onChange={searchPanel}
-                    />
-                </div>
-            </div>
+                {
+                    network.length != 0 ? (
+                        <div className="grid grid-cols-12">
+                            <div className="col-span-9">
+                                <ForceGraph
+                                    data={network}
+                                    nodeHoverTooltip={nodeHoverTooltip}
+                                    searchPanel={searchPanel}
+                                />
+                            </div>
+                            <div className="col-span-3">
+                                <SearchPanel 
+                                    node={panelData}
+                                    onChange={searchPanel}
+                                />
+                            </div>
+                        </div>  
+                    ) :
+                    (<div></div>)
+                }
         </Layout>
     )
 }
@@ -95,10 +99,13 @@ const NetworkPage = () => {
 export default NetworkPage
 
 // todo: fix box sizing
-// todo: add back nodeHoverToolTip
-// todo: add back searchPanel
 // todo: clean up code and remove all unused versions of this file
 // todo: unify two search experiences
 // todo: make progress on report
+// todo: send bob email update again
 // todo: check deadlines for this project... 
 // todo: start planning data upload
+
+// DONE
+// todo: add back nodeHoverToolTip
+// todo: add back searchPanel

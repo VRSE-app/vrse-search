@@ -37,7 +37,7 @@ const ForceGraph = (props) => {
             svg.attr('viewbox', [-width / 2, -height / 2, width, height])
 
             // Define Bubble Attributes - all these attributes are prefixed with the bubble keyword
-            const bubbleSize = (d) => d.score
+            const bubbleSize = (d) => d.score * 0.8
         
             const bubbleColor = (d) => { 
                 const yearToColor = d3.scaleSequential()
@@ -90,13 +90,14 @@ const ForceGraph = (props) => {
             const simulation = d3
                 .forceSimulation(nodes)
                 .force("link", d3.forceLink(filteredLinks).id(d => d.id))
+                .force('center', d3.forceCenter(width / 2, height / 2)) // set position of Center of gravity
                 .force("charge", d3.forceManyBody().strength(-250)) // changes the central force
                 .force("x", d3.forceX())
                 .force("y", d3.forceY())
             
             const drag = (simulation) => {
                 const dragStarted = (event, d) => {
-                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    if (!event.active) simulation.alphaTarget(0.2).restart();
                     d.fx = d.x;
                     d.fy = d.y;
                 };
@@ -184,9 +185,9 @@ const ForceGraph = (props) => {
                 });
 
             // Add Zoom functionality
-            // svg.call(d3.zoom().on("zoom", function (event) {
-            //     svg.attr("transform", event.transform);
-            // }));
+            svg.call(d3.zoom().on("zoom", function (event) {
+                svg.attr("transform", event.transform);
+            }));
         }
     }, [nodes, links])
 
