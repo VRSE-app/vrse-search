@@ -25,6 +25,7 @@ const VisualSearch = () => {
     const [value, setValue] = useState('')
     const [network, setNetwork] = useState({})
     const [panelData, setPanelData] = useState(tempObj);
+    const [searched, setSearched] = useState(false)
 
     const handleChange = (e) => setValue(e.target.value)
 
@@ -43,6 +44,7 @@ const VisualSearch = () => {
             .catch(error => {
                 console.log({error})
             })
+            .finally(() => setSearched(true))
     }
 
     function formatTooltipAbstract(input) {

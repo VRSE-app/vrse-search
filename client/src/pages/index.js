@@ -23,7 +23,7 @@ const Index = () => {
             from the <strong>Semantic Scholar Open Research Corpus</strong> and contains approximately 
             <strong> 25 million</strong> research publications on a range of subjects.
             <br/><br/>
-            <Link to="/visualSearch" className="underline font-bold hover:text-blue-700">Why not give visual search a try</Link>
+            <Link to="/visualSearch" className="underline font-bold hover:text-blue-700">Why not give visual search a try?</Link>
           </p>
         </div>
         {/* <SearchBar

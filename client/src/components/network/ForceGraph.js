@@ -19,7 +19,10 @@ const ForceGraph = (props) => {
                 // also get earliest and latest year
             })
 
-            var earliestYear = Math.min(...nodes.map(node => node.year));
+            var earliestYear = Math.min(...nodes
+                .filter(node => node.year !== null)
+                .map(node => node.year));
+
             var latestYear = Math.max(...nodes.map(node => node.year));
 
             // filter out links to nodes not in the network
@@ -49,7 +52,8 @@ const ForceGraph = (props) => {
             
             const yearToColor = d3
                 .scaleSequential()
-                .domain([earliestYear-10, latestYear])
+                .domain([earliestYear, latestYear])
+                // change the interpolator to use only visible colour range
                 .interpolator(d3.interpolateBlues);
 
             const bubbleColor = (d) => { 
