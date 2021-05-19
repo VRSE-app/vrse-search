@@ -17,8 +17,8 @@ RUN npm install
 # additional copy for gatsbyjs
 COPY gatsby-config.js .
 COPY tailwind.config.js .
+COPY gatsby-browser.js .
 # COPY gatsby-node.js .
-# COPY gatsby-browser.js .
 
 # Copy your .env file to the container filesystem
 # COPY .env .

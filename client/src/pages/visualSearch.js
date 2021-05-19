@@ -45,11 +45,9 @@ const VisualSearch = () => {
             })
     }
 
-    const nodeHoverTooltip = node => (
-        `<div>${node.title}</div>`
-    )
-
-    const searchPanel = (node) => {
+    const nodeHoverTooltip = node => `<div>${node.title}</div>`
+    
+    const searchPanel = node => {
         const newNode = {...node}
         setPanelData(newNode)
     }
@@ -76,7 +74,7 @@ const VisualSearch = () => {
                 </form>
             </div>
                 {
-                    network.length != 0 ? (
+                    network.length !== 0 ? (
                         <div className="grid grid-cols-12">
                             <div className="col-span-9">
                                 <ForceGraph

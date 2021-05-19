@@ -1,5 +1,5 @@
 import React from "react";
-import SubmitButton from "../buttons/SubmitButton";
+// import SubmitButton from "../buttons/SubmitButton";
 
 const SearchBar = ({ searchTerm, handleChange, handleSearch }) => {
     return (

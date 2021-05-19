@@ -2,13 +2,13 @@ import React, { useEffect, useRef } from "react"
 import * as d3 from 'd3'
 import styles from "./forceGraph.module.css";
 
-const ForceGraph = (props) => {
+const ForceGraph = ({ data, nodeHoverTooltip, searchPanel, width, height }) => {
     const containerRef = useRef(null)
     const svgRef = useRef(null)
     // const cache = useRef(props.data)
     
     // todo: this is re-rendering on every change in the parent (okay for now but why is it updating like that?)
-    const { nodes, links } = props.data
+    const { nodes, links } = data
     
     // called initially and on every data change
     useEffect(() => {
@@ -46,7 +46,6 @@ const ForceGraph = (props) => {
 
             // Define Bubble Attributes - all these attributes are prefixed with the bubble keyword
             const bubbleSize = (d) => d.score * 0.8
-            const bubbleLink = (d) => d.s2Url
 
             const bubbleColor = (d) => { 
                 // should make start and end year the start and end of this set of data
@@ -77,7 +76,7 @@ const ForceGraph = (props) => {
                     .style("font-weight", "bold")
                     .style("opacity", 1);
                 divTooltip
-                    .html(props.nodeHoverTooltip(d))
+                    .html(nodeHoverTooltip(d))
                     .style("left", `${x}px`)
                     .style("top", `${y - 28}px`);
             };
@@ -94,7 +93,7 @@ const ForceGraph = (props) => {
 
             const updatePanel = (d, x, y) => {
                 divPanel
-                    .html(props.searchPanel(d))
+                    .html(searchPanel(d))
             }
 
             // Simulation Logic
@@ -217,7 +216,7 @@ const ForceGraph = (props) => {
 
     return (
         <div ref={containerRef} className={styles.container}>
-            <svg ref={svgRef} width={props.width} height={props.width}></svg>
+            <svg ref={svgRef}></svg>
         </div>
     )
 }

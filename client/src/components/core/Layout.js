@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../core/Header";
 import Footer from "./Footer"
 import CookieBanner from "react-cookie-banner"
+import "../../styles/global.scss"
 
 const Layout = ({ children }) => (
     <div className="flex flex-col h-screen bg-gray-100 default-theme">
