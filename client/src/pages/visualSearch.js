@@ -45,8 +45,31 @@ const VisualSearch = () => {
             })
     }
 
-    const nodeHoverTooltip = node => `<div>${node.title}</div>`
-    
+    function formatTooltipAbstract(input) {
+        var text = ""
+
+        if (input.length === 0) {
+            text = "No abstract found."
+        } else if (input.length > 300) {
+            text = input.substring(0,300) + '...'
+        } else {
+            text = input.substring(0,300)
+        }
+
+        return text
+    }
+
+    const nodeHoverTooltip = node => {
+        var panel = document.getElementById("search-panel")
+        panel.style.opacity = "1.0"
+
+        return (`<div>
+            <h4>${node.title}</h4>
+            <p>${node.year}</p>
+            <p>${formatTooltipAbstract(node.abstract)}</p>
+        </div>`)
+    }
+
     const searchPanel = node => {
         const newNode = {...node}
         setPanelData(newNode)

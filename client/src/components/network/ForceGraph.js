@@ -2,13 +2,13 @@ import React, { useEffect, useRef } from "react"
 import * as d3 from 'd3'
 import styles from "./forceGraph.module.css";
 
-const ForceGraph = ({ data, nodeHoverTooltip, searchPanel, width, height }) => {
+const ForceGraph = (props) => {
     const containerRef = useRef(null)
     const svgRef = useRef(null)
     // const cache = useRef(props.data)
     
     // todo: this is re-rendering on every change in the parent (okay for now but why is it updating like that?)
-    const { nodes, links } = data
+    const { nodes, links } = props.data
     
     // called initially and on every data change
     useEffect(() => {
@@ -76,7 +76,7 @@ const ForceGraph = ({ data, nodeHoverTooltip, searchPanel, width, height }) => {
                     .style("font-weight", "bold")
                     .style("opacity", 1);
                 divTooltip
-                    .html(nodeHoverTooltip(d))
+                    .html(props.nodeHoverTooltip(d))
                     .style("left", `${x}px`)
                     .style("top", `${y - 28}px`);
             };
@@ -93,7 +93,7 @@ const ForceGraph = ({ data, nodeHoverTooltip, searchPanel, width, height }) => {
 
             const updatePanel = (d, x, y) => {
                 divPanel
-                    .html(searchPanel(d))
+                    .html(props.searchPanel(d))
             }
 
             // Simulation Logic
@@ -216,7 +216,7 @@ const ForceGraph = ({ data, nodeHoverTooltip, searchPanel, width, height }) => {
 
     return (
         <div ref={containerRef} className={styles.container}>
-            <svg ref={svgRef}></svg>
+            <svg ref={svgRef} width={props.width} height={props.width}></svg>
         </div>
     )
 }
