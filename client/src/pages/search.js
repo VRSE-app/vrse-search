@@ -31,7 +31,7 @@ const Search = () => {
     return (
         <div className="bg-gray-100">
             <Layout>
-                <div className="container-md mx-auto align-middle pt-8">
+                <div className="container align-middle pt-8">
                     <form
                         onSubmit={handleSubmit}
                         className="w-full mb-8"

@@ -16,8 +16,6 @@ const ForceGraph = (props) => {
             const validNodes = []
             nodes.forEach((d) => {
                 validNodes.push(d.id)
-
-        
                 // also get earliest and latest year
             })
 
@@ -40,19 +38,21 @@ const ForceGraph = (props) => {
 
             const svg = d3
                 .select(svgRef.current)
+                .append("g")
+                // .attr("transform", "scale(0.5)")
 
             // Workaround for centering
             svg.attr('viewbox', [-width / 2, -height / 2, width, height])
 
             // Define Bubble Attributes - all these attributes are prefixed with the bubble keyword
             const bubbleSize = (d) => d.score * 0.8
+            
+            const yearToColor = d3
+                .scaleSequential()
+                .domain([earliestYear-10, latestYear])
+                .interpolator(d3.interpolateBlues);
 
             const bubbleColor = (d) => { 
-                // should make start and end year the start and end of this set of data
-                const yearToColor = d3.scaleSequential()
-                .domain([earliestYear-50, latestYear])
-                .interpolator(d3.interpolateBlues);
-                
                 return yearToColor(d.year)
             }
 
@@ -161,7 +161,7 @@ const ForceGraph = (props) => {
                 .attr("stroke", "#999")
                 .attr("stroke-opacity", 0.6)
                 .selectAll("line")
-                .data(links)
+                .data(filteredLinks)
                 .join("line")
                 .attr("strokeWidth", d => Math.sqrt(d.value));
                 
@@ -175,8 +175,38 @@ const ForceGraph = (props) => {
                 .attr("font-weight", "bold")
                 .attr('text-anchor', 'end')
                 .attr('dominant-baseline', 'hanging')
-                .text(d => d.authors[0].name)
+                .text(d => {
+                    if(d.authors[0]) {
+                        return d.authors[0].name
+                    }
+                    return ""
+                })
                 .call(drag(simulation));
+
+            // const legend = svg
+            //     .append("g")
+            //     .selectAll("g")
+            //     .data(yearToColor.domain())
+            //     .enter()
+            //     .append('g')
+            //     .attr('class', 'legend')
+            //     .attr('transform', function(d, i) {
+            //         var height = "20px";
+            //         var x = 0;
+            //         var y = i * height;
+            //         return 'translate(' + x + ',' + y + ')';
+            //     });
+
+            // legend.append('rect')
+            //     .attr('width', "100px")
+            //     .attr('height', "20px")
+            //     .style('fill', yearToColor)
+            //     .style('stroke', yearToColor);
+
+            // legend.append('text')
+            //     .attr('x', "100px" + "20px")
+            //     .attr('y', "100px" - "20px")
+            //     .text(function(d) { return d; });
 
             // // update node positions
             simulation.on("tick", () => {
@@ -197,6 +227,18 @@ const ForceGraph = (props) => {
                     .attr("y", d => d.y)
             })
 
+            // simulation.on("end", () => {
+            //     console.log(svg.node().getBoundingClientRect())
+            //     const domRect = svg.node().getBoundingClientRect()
+            //     const scaleFactor = width / domRect.width
+            //     console.log(scaleFactor)
+            //     const dx = (1 - scaleFactor) * width
+            //     const dy = (1 - scaleFactor) * height
+
+                // svg
+                //     .attr("transform", `scale(${scaleFactor}) translate(${dx}, ${dy})`)
+            // })
+
             // MouseEvents
             node
                 .on("mouseover", (event, d) => {
@@ -216,7 +258,7 @@ const ForceGraph = (props) => {
 
     return (
         <div ref={containerRef} className={styles.container}>
-            <svg ref={svgRef} width={props.width} height={props.width}></svg>
+            <svg ref={svgRef}></svg>
         </div>
     )
 }

@@ -34,6 +34,7 @@ app.use('/api/v1', routes);
 
 app.listen(port, () => {
     console.log(`The server is listening on port ${port}`);
+    checkConnection()
 })
 
 // const { getAuthor } = require("./routes/getAuthor.js");

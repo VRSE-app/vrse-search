@@ -10,16 +10,21 @@ export default function SearchResultList({ results, searched }) {
         if (results.length > 0) {
             return (
                 results.map(result => {
-                    const id = result.id
-                    const title = result._source.title;
-                    const paperAbstract = result._source.paperAbstract.substring(0, 200) + "...";
-                    const fieldsOfStudy = result._source.fieldsOfStudy;
+                    const { title, s2Url } = result._source
+                    const paperAbstract = result._source.paperAbstract.substring(0, 200) + "..."
+                    const fieldsOfStudy = result._source.fieldsOfStudy
+
                     return (
-                        <div className="bg-white rounded px-4 py-4" key={id} >
-                            <h4>{title}</h4>
-                            {
-                                fieldsOfStudy.length >= 1 ? <div className="border border-transparent text-base font-medium rounded-md bg-blue-900 text-white px-2 py-1 w-min"><h6>{fieldsOfStudy}</h6></div> : <div></div>
-                            }
+                        <div className="bg-white rounded px-4 py-4" key={result.id}>
+                            <h4 className="text-blue-600 no-underline hover:underline">
+                                <a href={s2Url}>{title}</a>
+                            </h4>
+                            <div className="flex">
+                                {
+                                    fieldsOfStudy.length >= 1 ? fieldsOfStudy.map(field => <div className="border border-transparent text-base font-medium rounded-md bg-blue-900 text-white px-2 py-1 mr-2"><h6>{field}</h6></div>) 
+                                    : <div></div>
+                                }
+                            </div>
                             {
                                 paperAbstract.length === 3 ? <p>No abstract found</p> : <p>{paperAbstract}</p>
                             }
