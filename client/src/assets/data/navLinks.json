@@ -1,14 +1,18 @@
 [
-    {
-      "label": "About",
-      "url": "/about"
-    },
-    {
-        "label": "Feedback",
-        "url": "/feedback"
-    },
-    {
-      "label": "Search",
-      "url": "/search"
+  {
+    "label": "About",
+    "url": "/about"
+  },
+  {
+      "label": "Feedback",
+      "url": "/feedback"
+  },
+  {
+    "label": "Visual Search",
+    "url": "/visualSearch"
+  },
+  {
+    "label": "List Search",
+    "url": "/search"
   }
 ]
