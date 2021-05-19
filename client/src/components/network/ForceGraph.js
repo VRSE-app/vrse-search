@@ -46,13 +46,13 @@ const ForceGraph = (props) => {
 
             // Define Bubble Attributes - all these attributes are prefixed with the bubble keyword
             const bubbleSize = (d) => d.score * 0.8
-        
+            const bubbleLink = (d) => d.s2Url
+
             const bubbleColor = (d) => { 
                 // should make start and end year the start and end of this set of data
                 const yearToColor = d3.scaleSequential()
-                .domain([earliestYear, latestYear])
-                .interpolator(d3.interpolatePurples);
-                // .interpolator(d3.interpolateBlues);
+                .domain([earliestYear-50, latestYear])
+                .interpolator(d3.interpolateBlues);
                 
                 return yearToColor(d.year)
             }
@@ -74,7 +74,8 @@ const ForceGraph = (props) => {
                 divTooltip
                     .transition()
                     .duration(200)
-                    .style("opacity", 0.9);
+                    .style("font-weight", "bold")
+                    .style("opacity", 1);
                 divTooltip
                     .html(props.nodeHoverTooltip(d))
                     .style("left", `${x}px`)
@@ -101,13 +102,13 @@ const ForceGraph = (props) => {
                 .forceSimulation(nodes)
                 .force("link", d3.forceLink(filteredLinks).id(d => d.id))
                 .force('center', d3.forceCenter(width / 2, height / 2)) // set position of Center of gravity
-                .force("charge", d3.forceManyBody().strength(-250)) // changes the central force
+                .force("charge", d3.forceManyBody().strength(-350)) // changes the central force
                 .force("x", d3.forceX())
                 .force("y", d3.forceY())
             
             const drag = (simulation) => {
                 const dragStarted = (event, d) => {
-                    if (!event.active) simulation.alphaTarget(0.2).restart();
+                    if (!event.active) simulation.alphaTarget(0.1).restart();
                     d.fx = d.x;
                     d.fy = d.y;
                 };
@@ -144,6 +145,17 @@ const ForceGraph = (props) => {
                 .attr("r", bubbleSize)
                 .attr("fill", bubbleColor)
                 .call(drag(simulation))
+ 
+            // make every node clickable with href to semantic scholar id
+            d3
+                .selectAll("circle").each(function(d) {
+                    d3
+                        .select(this.parentNode)
+                        .append("a")
+                        .attr('xlink:href', d.s2Url)
+                        .node()
+                        .appendChild(this)
+                })
 
             const link = svg
                 .append("g")
@@ -153,16 +165,18 @@ const ForceGraph = (props) => {
                 .data(links)
                 .join("line")
                 .attr("strokeWidth", d => Math.sqrt(d.value));
-
-            const label = svg.append("g")
-                .attr("class", "labels")
+                
+            const label = svg
+                .append("g")
                 .selectAll("text")
                 .data(nodes)
                 .enter()
                 .append("text")
-                .attr('text-anchor', 'middle')
-                .attr('dominant-baseline', 'central')
-                // .text(d => "hi")
+                .attr("fill", "cadetblue")
+                .attr("font-weight", "bold")
+                .attr('text-anchor', 'end')
+                .attr('dominant-baseline', 'hanging')
+                .text(d => d.authors[0].name)
                 .call(drag(simulation));
 
             // // update node positions
@@ -194,10 +208,10 @@ const ForceGraph = (props) => {
                     removeTooltip();
                 });
 
-            // Add Zoom functionality
-            svg.call(d3.zoom().on("zoom", function (event) {
-                svg.attr("transform", event.transform);
-            }));
+            // Add Zoom functionality -> try to maintain full context without zoom
+            // svg.call(d3.zoom().on("zoom", function (event) {
+            //     svg.attr("transform", event.transform);
+            // }));
         }
     }, [nodes, links])
 
@@ -209,5 +223,3 @@ const ForceGraph = (props) => {
 }
 
 export default ForceGraph
-
-// step one add the bubbles

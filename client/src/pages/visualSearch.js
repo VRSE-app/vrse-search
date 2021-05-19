@@ -45,7 +45,9 @@ const VisualSearch = () => {
             })
     }
 
-    const nodeHoverTooltip = node => (`<div>${node.title}</div>`)
+    const nodeHoverTooltip = node => (
+        `<div>${node.title}</div>`
+    )
 
     const searchPanel = (node) => {
         const newNode = {...node}
