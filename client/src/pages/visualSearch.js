@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import * as d3 from 'd3'
 import axios from 'axios'
 
 import Layout from '../components/core/Layout'
@@ -37,12 +38,11 @@ const VisualSearch = () => {
         axios.get(`http://localhost:3000/api/v1/_search/${value}`)
             .then(response => {
                 const results = response.data
-                console.log({results})
                 const newNetwork = constructNetwork(results)
                 setNetwork(newNetwork)
             })
             .catch(error => {
-                console.log({error})
+                console.log({ error })
             })
             .finally(() => setSearched(true))
     }

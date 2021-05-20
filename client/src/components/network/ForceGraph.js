@@ -3,27 +3,25 @@ import * as d3 from 'd3'
 import styles from "./forceGraph.module.css";
 
 const ForceGraph = (props) => {
-    const containerRef = useRef(null)
-    const svgRef = useRef(null)
-    // const cache = useRef(props.data)
-    
-    // todo: this is re-rendering on every change in the parent (okay for now but why is it updating like that?)
+    var containerRef = useRef(null)
+    var svgRef = useRef(null)
     const { nodes, links } = props.data
     
-    // called initially and on every data change
+    // should be called initially and on every data change
     useEffect(() => {
         if (nodes != null && links != null) {
             const validNodes = []
             nodes.forEach((d) => {
                 validNodes.push(d.id)
-                // also get earliest and latest year
             })
 
             var earliestYear = Math.min(...nodes
                 .filter(node => node.year !== null)
                 .map(node => node.year));
 
-            var latestYear = Math.max(...nodes.map(node => node.year));
+            var latestYear = Math.max(...nodes
+                .filter(node => node.year !== null)
+                .map(node => node.year));
 
             // filter out links to nodes not in the network
             const filteredLinks = Object.entries(links)
@@ -39,14 +37,14 @@ const ForceGraph = (props) => {
             console.log({height})
             console.log({width})
 
-            const svg = d3
-                .select(svgRef.current)
+            d3.select(svgRef.current)
+                .selectAll("g")
+                .remove()
+            
+            const svg = d3.select(svgRef.current)
                 .append("g")
-                // .attr("transform", "scale(0.5)")
-
-            // Workaround for centering
-            svg.attr('viewbox', [-width / 2, -height / 2, width, height])
-
+                .attr("id", "root")
+            
             // Define Bubble Attributes - all these attributes are prefixed with the bubble keyword
             const bubbleSize = (d) => d.score * 0.8
             
@@ -143,10 +141,18 @@ const ForceGraph = (props) => {
                 .attr("stroke", "#fff")
                 .attr("strokeWidth", 2)
                 .selectAll("circle")
+                .remove()
                 .data(nodes)
-                .join("circle")
-                .attr("r", bubbleSize)
-                .attr("fill", bubbleColor)
+                .join(
+                    enter => enter
+                        .append("circle")
+                        .attr("r", bubbleSize)
+                        .attr("fill", bubbleColor),
+                    update => update
+                        .attr("r", bubbleSize)
+                        .attr("fill", bubbleColor),
+                    exit => exit.remove()
+                )
                 .call(drag(simulation))
  
             // make every node clickable with href to semantic scholar id
@@ -173,46 +179,31 @@ const ForceGraph = (props) => {
                 .append("g")
                 .selectAll("text")
                 .data(nodes)
-                .enter()
-                .append("text")
-                .attr("fill", "cadetblue")
-                .attr("font-weight", "bold")
-                .attr('text-anchor', 'end')
-                .attr('dominant-baseline', 'hanging')
-                .text(d => {
-                    if(d.authors[0]) {
-                        return d.authors[0].name
-                    }
-                    return ""
-                })
+                .join(
+                    enter => enter
+                        .append("text")
+                        .attr("fill", "cadetblue")
+                        .attr("font-weight", "bold")
+                        .attr('text-anchor', 'end')
+                        .attr('dominant-baseline', 'hanging')
+                        .text(d => {
+                            if(d.authors[0]) {
+                                return d.authors[0].name
+                            }
+                            return ""
+                        }),
+                    update => update
+                        .text(d => {
+                            if(d.authors[0]) {
+                                return d.authors[0].name
+                            }
+                            return ""
+                        }),
+                    exit => exit.remove()
+                )
                 .call(drag(simulation));
 
-            // const legend = svg
-            //     .append("g")
-            //     .selectAll("g")
-            //     .data(yearToColor.domain())
-            //     .enter()
-            //     .append('g')
-            //     .attr('class', 'legend')
-            //     .attr('transform', function(d, i) {
-            //         var height = "20px";
-            //         var x = 0;
-            //         var y = i * height;
-            //         return 'translate(' + x + ',' + y + ')';
-            //     });
-
-            // legend.append('rect')
-            //     .attr('width', "100px")
-            //     .attr('height', "20px")
-            //     .style('fill', yearToColor)
-            //     .style('stroke', yearToColor);
-
-            // legend.append('text')
-            //     .attr('x', "100px" + "20px")
-            //     .attr('y', "100px" - "20px")
-            //     .text(function(d) { return d; });
-
-            // // update node positions
+            // update node positions
             simulation.on("tick", () => {
                 node
                     .attr("cx", d => d.x)
