@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   #################################
@@ -14,10 +14,6 @@ services:
       - NODE_ENV=local
       - ES_HOST=elasticsearch
       - PORT=3000
-    volumes:
-      - ./server/src:/usr/src/app/server/src # may not need the additional server in the path (?)
-      - ./books:/usr/src/app/books # you have to mount the volume where the data is imported from
-      - ./publications:/usr/src/app/publications # you have to mount the volume where the data is imported from
     command: npm start
 
   #################################
@@ -28,8 +24,6 @@ services:
     build: ./client
     environment:
       - REACT_APP_PORT=8000
-    # expose:
-    #   - 8000
     ports:
       - 8000:8000
     volumes:
@@ -38,23 +32,3 @@ services:
     links:
       - server
     command: npm start
-
-  #################################
-  # Setup elasticsearch container #
-  #################################
-  # An Elasticsearch container for storing and searching data
-  elasticsearch: # Elasticsearch Instance
-    container_name: vrse-search
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
-    volumes: # Persist ES data in separate "esdata" volume
-      - esdata:/usr/share/elasticsearch/data
-    environment:
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - discovery.type=single-node
-    ports: # Expose Elasticsearch ports
-      - "9300:9300"
-      - "9200:9200"
-
-volumes: # Define seperate volume for Elasticsearch data
-  esdata: 
