@@ -1,11 +1,5 @@
 const elasticsearch = require('@elastic/elasticsearch');
-
-// Core ES variables for this project
-// const indexName = 'vrse-search';
 const type = 'publication';
-const port = 9200;
-const host = process.env.ES_HOST || 'localhost';
-// const client = new elasticsearch.Client({ host: { host, port } });
 const client = new elasticsearch.Client({ node: 'http://83.136.249.107:9200' })
 
 /** Check the ES connection status */
