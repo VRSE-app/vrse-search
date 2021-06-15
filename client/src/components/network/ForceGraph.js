@@ -3,26 +3,25 @@ import * as d3 from 'd3'
 import styles from "./forceGraph.module.css";
 
 const ForceGraph = (props) => {
-    const containerRef = useRef(null)
-    const svgRef = useRef(null)
-    // const cache = useRef(props.data)
-    
-    // todo: this is re-rendering on every change in the parent (okay for now but why is it updating like that?)
+    var containerRef = useRef(null)
+    var svgRef = useRef(null)
     const { nodes, links } = props.data
     
-    // called initially and on every data change
+    // should be called initially and on every data change
     useEffect(() => {
         if (nodes != null && links != null) {
             const validNodes = []
             nodes.forEach((d) => {
                 validNodes.push(d.id)
-
-        
-                // also get earliest and latest year
             })
 
-            var earliestYear = Math.min(...nodes.map(node => node.year));
-            var latestYear = Math.max(...nodes.map(node => node.year));
+            var earliestYear = Math.min(...nodes
+                .filter(node => node.year !== null)
+                .map(node => node.year));
+
+            var latestYear = Math.max(...nodes
+                .filter(node => node.year !== null)
+                .map(node => node.year));
 
             // filter out links to nodes not in the network
             const filteredLinks = Object.entries(links)
@@ -38,22 +37,24 @@ const ForceGraph = (props) => {
             console.log({height})
             console.log({width})
 
-            const svg = d3
-                .select(svgRef.current)
-
-            // Workaround for centering
-            svg.attr('viewbox', [-width / 2, -height / 2, width, height])
-
+            d3.select(svgRef.current)
+                .selectAll("g")
+                .remove()
+            
+            const svg = d3.select(svgRef.current)
+                .append("g")
+                .attr("id", "root")
+            
             // Define Bubble Attributes - all these attributes are prefixed with the bubble keyword
             const bubbleSize = (d) => d.score * 0.8
-        
-            const bubbleColor = (d) => { 
-                // should make start and end year the start and end of this set of data
-                const yearToColor = d3.scaleSequential()
+            
+            const yearToColor = d3
+                .scaleSequential()
                 .domain([earliestYear, latestYear])
-                .interpolator(d3.interpolatePurples);
-                // .interpolator(d3.interpolateBlues);
-                
+                // change the interpolator to use only visible colour range
+                .interpolator(d3.interpolateBlues);
+
+            const bubbleColor = (d) => { 
                 return yearToColor(d.year)
             }
 
@@ -74,7 +75,8 @@ const ForceGraph = (props) => {
                 divTooltip
                     .transition()
                     .duration(200)
-                    .style("opacity", 0.9);
+                    .style("font-weight", "bold")
+                    .style("opacity", 1);
                 divTooltip
                     .html(props.nodeHoverTooltip(d))
                     .style("left", `${x}px`)
@@ -101,13 +103,13 @@ const ForceGraph = (props) => {
                 .forceSimulation(nodes)
                 .force("link", d3.forceLink(filteredLinks).id(d => d.id))
                 .force('center', d3.forceCenter(width / 2, height / 2)) // set position of Center of gravity
-                .force("charge", d3.forceManyBody().strength(-250)) // changes the central force
+                .force("charge", d3.forceManyBody().strength(-350)) // changes the central force
                 .force("x", d3.forceX())
                 .force("y", d3.forceY())
             
             const drag = (simulation) => {
                 const dragStarted = (event, d) => {
-                    if (!event.active) simulation.alphaTarget(0.2).restart();
+                    if (!event.active) simulation.alphaTarget(0.1).restart();
                     d.fx = d.x;
                     d.fy = d.y;
                 };
@@ -139,33 +141,69 @@ const ForceGraph = (props) => {
                 .attr("stroke", "#fff")
                 .attr("strokeWidth", 2)
                 .selectAll("circle")
+                .remove()
                 .data(nodes)
-                .join("circle")
-                .attr("r", bubbleSize)
-                .attr("fill", bubbleColor)
+                .join(
+                    enter => enter
+                        .append("circle")
+                        .attr("r", bubbleSize)
+                        .attr("fill", bubbleColor),
+                    update => update
+                        .attr("r", bubbleSize)
+                        .attr("fill", bubbleColor),
+                    exit => exit.remove()
+                )
                 .call(drag(simulation))
+ 
+            // make every node clickable with href to semantic scholar id
+            d3
+                .selectAll("circle").each(function(d) {
+                    d3
+                        .select(this.parentNode)
+                        .append("a")
+                        .attr('xlink:href', d.s2Url)
+                        .node()
+                        .appendChild(this)
+                })
 
             const link = svg
                 .append("g")
                 .attr("stroke", "#999")
                 .attr("stroke-opacity", 0.6)
                 .selectAll("line")
-                .data(links)
+                .data(filteredLinks)
                 .join("line")
                 .attr("strokeWidth", d => Math.sqrt(d.value));
-
-            const label = svg.append("g")
-                .attr("class", "labels")
+                
+            const label = svg
+                .append("g")
                 .selectAll("text")
                 .data(nodes)
-                .enter()
-                .append("text")
-                .attr('text-anchor', 'middle')
-                .attr('dominant-baseline', 'central')
-                // .text(d => "hi")
+                .join(
+                    enter => enter
+                        .append("text")
+                        .attr("fill", "cadetblue")
+                        .attr("font-weight", "bold")
+                        .attr('text-anchor', 'end')
+                        .attr('dominant-baseline', 'hanging')
+                        .text(d => {
+                            if(d.authors[0]) {
+                                return d.authors[0].name
+                            }
+                            return ""
+                        }),
+                    update => update
+                        .text(d => {
+                            if(d.authors[0]) {
+                                return d.authors[0].name
+                            }
+                            return ""
+                        }),
+                    exit => exit.remove()
+                )
                 .call(drag(simulation));
 
-            // // update node positions
+            // update node positions
             simulation.on("tick", () => {
                 node
                     .attr("cx", d => d.x)
@@ -184,6 +222,18 @@ const ForceGraph = (props) => {
                     .attr("y", d => d.y)
             })
 
+            // simulation.on("end", () => {
+            //     console.log(svg.node().getBoundingClientRect())
+            //     const domRect = svg.node().getBoundingClientRect()
+            //     const scaleFactor = width / domRect.width
+            //     console.log(scaleFactor)
+            //     const dx = (1 - scaleFactor) * width
+            //     const dy = (1 - scaleFactor) * height
+
+                // svg
+                //     .attr("transform", `scale(${scaleFactor}) translate(${dx}, ${dy})`)
+            // })
+
             // MouseEvents
             node
                 .on("mouseover", (event, d) => {
@@ -194,20 +244,18 @@ const ForceGraph = (props) => {
                     removeTooltip();
                 });
 
-            // Add Zoom functionality
-            svg.call(d3.zoom().on("zoom", function (event) {
-                svg.attr("transform", event.transform);
-            }));
+            // Add Zoom functionality -> try to maintain full context without zoom
+            // svg.call(d3.zoom().on("zoom", function (event) {
+            //     svg.attr("transform", event.transform);
+            // }));
         }
     }, [nodes, links])
 
     return (
         <div ref={containerRef} className={styles.container}>
-            <svg ref={svgRef} width={props.width} height={props.width}></svg>
+            <svg ref={svgRef}></svg>
         </div>
     )
 }
 
 export default ForceGraph
-
-// step one add the bubbles

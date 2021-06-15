@@ -8,7 +8,8 @@ const About = () => (
         <SEO title="About" />
         <div className="container pt-12">
             <h1>About</h1>
-            <p>This is where the about section content can go</p>
+            <p>VRSE is built on top of a number of technologies including GatbsyJS, ReactJS, SCSS, TailwindCSS, 
+            Docker, UpCloud, Linux, ElasticSearch, NodeJS, ExpressJS, bash and more.</p>
         </div>
     </Layout>
 )

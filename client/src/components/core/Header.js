@@ -26,9 +26,9 @@ const Header = () => {
 
     return (
         <>
-            <nav className="bg-white">
+            <nav className="bg-white h-20">
                 <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-                    <div className="relative flex items-center justify-between h-16">
+                    <div className="relative flex items-center justify-between h-20">
                         <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                             {/* Mobile menu button */}
                             <button
@@ -54,10 +54,10 @@ const Header = () => {
                             <div className="flex-shrink-0">
                                 {/* there is a separate logo depending on screen size - really clever*/}
                                 <Link to="/">
-                                    <img className="block lg:hidden h-8 w-auto" src={favicon} alt="VRSE logo" />
+                                    <img className="block lg:hidden h-10 w-auto" src={favicon} alt="VRSE logo" />
                                 </Link>
                                 <Link to="/">
-                                    <img className="hidden lg:block h-8 w-auto" src={logo} alt="VRSE logo" />
+                                    <img className="hidden lg:block h-10 w-auto" src={logo} alt="VRSE logo" />
                                 </Link>
                             </div>
                             {/* non mobile nav */}
@@ -67,7 +67,7 @@ const Header = () => {
                                         NavLinks.map((item) => (
                                             <Link
                                                 to={item.url}
-                                                className="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-secondary hover:text-primary focus:outline-none focus:text-primary transition duration-150 ease-in-out"
+                                                className="ml-4 px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-teal-700 focus:outline-none focus:text-primary focus:bg-teal-700 transition duration-150 ease-in-out"
                                                 key={item.label}
                                             >
                                                 {item.label}

@@ -31,7 +31,7 @@ const Search = () => {
     return (
         <div className="bg-gray-100">
             <Layout>
-                <div className="container-md mx-auto align-middle pt-8">
+                <div className="container align-middle pt-8">
                     <form
                         onSubmit={handleSubmit}
                         className="w-full mb-8"
@@ -40,7 +40,7 @@ const Search = () => {
                             <input
                                 value={value}
                                 onChange={handleChange}
-                                className="col-span-4 sm:col-span-3 bg-white border p-3 mr-3 rounded text-gray-600 w-full"
+                                className="col-span-4 m-0 sm:col-span-3 bg-white border p-3 mr-3 rounded text-gray-600 w-full"
                                 placeholder="Search..."
                             />
                             <SubmitButton 

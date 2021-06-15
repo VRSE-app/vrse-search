@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import * as d3 from 'd3'
 import axios from 'axios'
 
 import Layout from '../components/core/Layout'
@@ -25,6 +26,7 @@ const VisualSearch = () => {
     const [value, setValue] = useState('')
     const [network, setNetwork] = useState({})
     const [panelData, setPanelData] = useState(tempObj);
+    const [searched, setSearched] = useState(false)
 
     const handleChange = (e) => setValue(e.target.value)
 
@@ -36,18 +38,41 @@ const VisualSearch = () => {
         axios.get(`http://localhost:3000/api/v1/_search/${value}`)
             .then(response => {
                 const results = response.data
-                console.log({results})
                 const newNetwork = constructNetwork(results)
                 setNetwork(newNetwork)
             })
             .catch(error => {
-                console.log({error})
+                console.log({ error })
             })
+            .finally(() => setSearched(true))
     }
 
-    const nodeHoverTooltip = node => (`<div>${node.title}</div>`)
+    function formatTooltipAbstract(input) {
+        var text = ""
 
-    const searchPanel = (node) => {
+        if (input.length === 0) {
+            text = "No abstract found."
+        } else if (input.length > 300) {
+            text = input.substring(0,300) + '...'
+        } else {
+            text = input.substring(0,300)
+        }
+
+        return text
+    }
+
+    const nodeHoverTooltip = node => {
+        var panel = document.getElementById("search-panel")
+        panel.style.opacity = "1.0"
+
+        return (`<div>
+            <h4>${node.title}</h4>
+            <p>${node.year}</p>
+            <p>${formatTooltipAbstract(node.abstract)}</p>
+        </div>`)
+    }
+
+    const searchPanel = node => {
         const newNode = {...node}
         setPanelData(newNode)
     }
@@ -74,7 +99,7 @@ const VisualSearch = () => {
                 </form>
             </div>
                 {
-                    network.length != 0 ? (
+                    network.length !== 0 ? (
                         <div className="grid grid-cols-12">
                             <div className="col-span-9">
                                 <ForceGraph

@@ -8,21 +8,36 @@ const SearchPanel = ({node}) => {
     const reducer = (accumulator, currentValue) => accumulator + ", " + currentValue.name
     const combinedAuthors = "by " + authors.reduce(reducer, "").substring(1)
 
+    function formatAbstract(input) {
+        var text = ""
+
+        if (input.length === 0) {
+            text = "No abstract found."
+        } else if (input.length > 700) {
+            text = input.substring(0,700) + '...'
+        } else {
+            text = input.substring(0,700)
+        }
+
+        return text
+    }
+
     return (
-        <div className="min-h-full p-5 bg-white border-2">
-            <h4>{title}</h4>
-            <div className="flex">
-                <div className="flex-1">
-                    { s2Url && <p className="font-bold cursor-pointer"><a href={s2Url}>s2Url</a></p>}
+        <div className="min-h-full p-5 bg-white border-l-2">
+            <div id="search-panel" style={{ opacity:"0" }}>
+                <h4>{title}</h4>
+                <div className="flex">
+                    <div className="flex-1">
+                        { s2Url && <p className="font-bold cursor-pointer"><a href={s2Url}>s2Url</a></p>}
+                    </div>
+                    <div className="flex-1">
+                        { doiUrl && <p className="font-bold cursor-pointer"><a href={doiUrl}>doiUrl</a></p>}
+                    </div>
                 </div>
-                <div className="flex-1">
-                    { doiUrl && <p className="font-bold cursor-pointer"><a href={doiUrl}>doiUrl</a></p>}
-                </div>
+                <p>{year}</p>
+                <p>{combinedAuthors}</p>
+                <p>{formatAbstract(abstract)}</p>
             </div>
-            <p>{year}</p>
-            <p>{combinedAuthors}</p>
-            <p>{abstract.substring(0,400) + '...'}</p>
-            {/* could be author bio or other related publications */}
         </div>
     )
 }

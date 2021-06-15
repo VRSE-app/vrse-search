@@ -1,38 +1,39 @@
+
 .container {
-    width: 100%;
-    height: 80vh;
+    /* width: 100%; */
+    height: 70vh;
     position: relative;
     background-color: white;
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6); */
-  }
+}
   
-  .container svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
+.container svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
   
-  .male {
-    fill: rgb(22, 130, 218);
-  }
-  
-  .female {
-    fill: rgb(246, 0, 0);
-  }
-  
-  .node text {
-    font: 12px sans-serif;
-  }
-  
-  div.tooltip {
-    position: absolute;
-    text-align: center;
-    width: 110px;
-    padding: 10px;
-    font: 12px sans-serif;
-    background: lightsteelblue;
-    border: 0;
-    border-radius: 8px;
-    pointer-events: none;
-  }
-  
+.node text {
+  font: 12px sans-serif;
+  background-color: #FFF222
+}
+
+/* .labels {
+  font: 12px sans-serif bold;
+  background-color: #FFF222
+} */
+
+div.tooltip {
+  position: absolute;
+  text-align: left;
+  width: 500px;
+  padding: 5px;
+  padding-left: 8px;
+  padding-right: 8px;
+  font: 14px sans-serif;
+  background-color: #FFFFFF;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
+  /* box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); */
+  border-radius: 8px;
+  pointer-events: none;
+}

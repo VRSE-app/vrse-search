@@ -8,7 +8,6 @@ router.get('/_search/:input', async (req, res) => {
     
     response = await client.search({
         index: 'vrse-search',
-        type: 'publication',
         body: {
             size: 100,
             query: {
@@ -24,9 +23,9 @@ router.get('/_search/:input', async (req, res) => {
         articles.push(article)
     });
 
+    // does this really behave as expected? could try to show some links
     response = await client.search({
         index: 'vrse-search',
-        type: 'publication',
         body: {
             query: {
                 ids: { values: [...ids] }
